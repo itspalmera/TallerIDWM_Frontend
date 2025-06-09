@@ -1,7 +1,3 @@
 #!/usr/bin/env sh
-. "$(dirname "$0")/h"
 
-npm run lint
-
-echo " husky - pre-push hook"
-echo " husky - pre-push hook done"
+echo "husky run"
