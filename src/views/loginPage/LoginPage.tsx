@@ -1,5 +1,39 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
+
+const formSchema = z.object({
+    email: z.string().email({
+        message: "Ingrese un correo electrónico válido.",
+    }).nonempty({
+        message: "Email es requerido.",
+    }),
+    password: z.string().nonempty({
+        message: "Contraseña es requerida.",
+    }),
+})
+
 // Mantiene la lógica de negocio de la página de inicio de sesión (Axios)
 export const LoginPage = () => {
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    });
+
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
+        console.log("Valores enviados de formulario:", values);
+        // Aquí puedes manejar la lógica de inicio de sesión, como enviar los datos a un servidor
+    }
+
     return (
         <div className="flex flex-col md:flex-row h-screen">
             {/* Lado Izquierdo */}
@@ -13,7 +47,7 @@ export const LoginPage = () => {
             </div>
 
             {/* Lado Derecho */}
-            <div className="md:w-1/2 w-full flex items-center justify-center bg-white px-6 py-10">
+            <div className="md:w-1/2 w-full flex items-center justify-center bg-white py-10">
                 <div className="w-full max-w-md">
                     <h2 className="text-3xl md:text-[40px] font-bold mb-4 text-center">
                         BlackCat
@@ -22,32 +56,39 @@ export const LoginPage = () => {
                         Iniciar Sesión
                     </h3>
 
-                    <form className="space-y-4">
-                        <p className="text-[20px] font-semibold mb-4 text-center md:text-left">
-                            Correo Electrónico
-                        </p>
-                        <input
-                            type="email"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                        />
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Correo Electrónico</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Contraseña</FormLabel>
+                                        <FormControl>
+                                            <Input type="password" placeholder="" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button type="submit" className="md:w-full flex items-center justify-center">Iniciar Sesión</Button>
+                        </form>
+                    </Form>
 
-                        <p className="text-[20px] font-semibold mb-4 text-center md:text-left">
-                            Contraseña
-                        </p>
-                        <input
-                            type="password"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                        />    
-
-                        <button 
-                        type="submit"
-                        className="w-full text-[20px] text-center bg-gray-800 text-white hover:bg-gray-900 py-3 rounded-md">
-                            Iniciar Sesión
-                        </button>
-                        
-                    </form>
-
-                    <div className="m-4 text-sm text-gray-600 text-center md:text-center"> 
+                    <div className="m-4 text-sm text-gray-600 text-center md:text-center">
                         ¿No tienes cuenta? {' '}
                         <a href="#" className=" text-blue-600 hover:text-blue-800 font-semibold">
                             Regístrate
