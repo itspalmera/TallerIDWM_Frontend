@@ -1,11 +1,17 @@
 "use client";
 
+import { ApiBackend } from "@/clients/axios";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AuthContext } from "@/contexts/auth/AuthContext";
+import { ResponseAPI } from "@/interfaces/ResponseAPI";
+import { User } from "@/interfaces/User";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { set } from "zod/v4-mini";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -29,9 +35,42 @@ export const LoginPage = () => {
         },
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log("Valores enviados de formulario:", values);
-        // Aquí puedes manejar la lógica de inicio de sesión, como enviar los datos a un servidor
+    const[errors, setErrors] = useState<string | null>(null);
+    const[errorBool, setErrorBool] = useState<boolean>(false);
+    const { auth } = useContext(AuthContext);
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            console.log("Valores enviados en formulario:", values);
+            const { data } = await ApiBackend.post<ResponseAPI>('auth/login', values);
+
+            if (data.success === false) {
+                console.error("Error en la respuesta del servidor:", data.message);
+                setErrors("Error en la respuesta del servidor: ");
+                setErrorBool(true);
+                return;
+            }
+            setErrors(null);
+            setErrorBool(false);
+
+            const data_ = data.data;
+            const user_ : User = {
+                email : data_.email,
+                lastName : data_.lastName,
+                name : data_.name,
+                token : data_.token,
+            } 
+
+            console.log("Datos del usuario:", user_);
+            auth(user_);
+        }
+        catch (error : any) {
+            let errorCatch = error.response.data.message
+            console.error("Error al enviar el formulario:", errorCatch);
+            setErrors(errorCatch);
+            setErrorBool(true);
+        }
+    
     }
 
     return (
@@ -84,6 +123,13 @@ export const LoginPage = () => {
                                     </FormItem>
                                 )}
                             />
+
+                            {errorBool && (
+                                <div className="text-red-500 text-sm text-center p-2 bg-red-100 rounded">
+                                    {errors}
+                                </div>
+                            )}
+
                             <Button type="submit" className="md:w-full flex items-center justify-center">Iniciar Sesión</Button>
                         </form>
                     </Form>

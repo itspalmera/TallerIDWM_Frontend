@@ -1,8 +1,8 @@
 export interface User {
-    name:       string;
-    lastName:   string;
-    email:      string;
-    phone:      string;
+    name?:       string;
+    lastName?:   string;
+    email?:      string;
+    phone?:      string;
     street?:     string;
     number?:     string;
     commune?:    string;
@@ -10,8 +10,8 @@ export interface User {
     postalCode?: string;
     registered?: Date;
     lastAccess?: Date;
-    birthDate:  Date;
+    birthDate?:  Date;
     active?:     boolean;
-    token:      string;
-    role:       string;
+    token?:      string;
+    role?:       string;
 }
