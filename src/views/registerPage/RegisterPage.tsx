@@ -7,34 +7,41 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { use } from "react";
-import { number } from "zod/v4-mini";
+import { number, any, email } from 'zod/v4-mini';
+import { ApiBackend } from "@/clients/axios";
+import { ResponseAPI } from "@/interfaces/ResponseAPI";
+import { fi } from "zod/v4/locales";
 
 
 // Definimos el esquema de validación con Zod
 const formSchema = z.object({
-    username: z.string().min(3, {
+    name: z.string().min(3, {
         message: "Username must be at least 3 characters.",
     }).nonempty({
         message: "Username is required.",
     }),
+
+    lastname: z.string().min(3, {
+        message: "Last name must be at least 3 characters.",
+    }).nonempty({
+        message: "Last name is required.",
+    }),
     
-    Email: z.string().email( {
+    email: z.string().email( {
         message: "Please enter a valid email address.",
     }).nonempty({
         message: "Email is required."
     }),
 
-    number: z.string().min(9, {
+    phone: z.string().min(9, {
         message: "Phone number must be at least 10 characters.",
     }).nonempty({
         message: "Phone number is required.",
     }),
 
-    birthday: z.string()
-    .nonempty({ message: "Birthday is required." })
-    .regex(/^\d{2}-\d{2}-\d{4}$/, {
-        message: "Birthday must be in the format YYYY-MM-DD.",
-    }),
+    birthDate: z.string().nonempty({ 
+        message: "Birthday is required." }),
+
 
     password: z.string().min(6, {
         message: "Password must be at least 6 characters.",
@@ -42,7 +49,7 @@ const formSchema = z.object({
         message: "password required.",
     }),
 
-    ConfirmPassword: z.string().min(6, {
+    confirmPassword: z.string().min(6, {
         message: "Password must be at least 6 characters.",
     }).nonempty({
         message: "password required.",
@@ -54,19 +61,38 @@ export const RegisterPage = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
-            Email: "",
-            number: "",
-            birthday: "",
+            name: "",
+            lastname: "",
+            email: "",
+            phone: "",
+            birthDate: "",
             password: "",
-            ConfirmPassword: "",
+            confirmPassword: "",
 
         },
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log("Valores enviados en el formulario:", values);
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            console.log("Valores enviados en el formulario:", values);
+            const data = await ApiBackend.post<ResponseAPI>('Auth/register', values);
+            /*
+            const user_ : User = {
+                firstName: data.firtsName,
+                email: data.email,
+                lastName: data.lastName,
+                token : data.token
+            }
+            */
+            console.log("Respuesta del servidor:", data);
+
+        }
+        
+        catch (error: any) {
+            console.error("Error al enviar el formulario:", error);
+        }
     }
+
 
     return (
         // Usaremos Axios y cosas aqui 
@@ -110,10 +136,10 @@ export const RegisterPage = () => {
                     <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
                         
-                    {/*TODO: USERNAME */}
+                        {/*TODO: USERNAME */}
                         <FormField
                         control={form.control}
-                        name="username"
+                        name="name"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Nombre</FormLabel>
@@ -125,10 +151,25 @@ export const RegisterPage = () => {
                         )}
                         />
 
+                        {/* TODO: lastName */}
+                        <FormField
+                        control={form.control}
+                        name="lastname"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Apellido</FormLabel>
+                            <FormControl>
+                                <Input placeholder="apellido" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
                         {/* TODO: EMAIL */}
                         <FormField
                         control={form.control}
-                        name="Email"
+                        name="email"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Correo</FormLabel>
@@ -143,7 +184,7 @@ export const RegisterPage = () => {
                         {/* TODO: PHONE NUMBER */}
                         <FormField
                         control={form.control}
-                        name="number"
+                        name="phone"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Numero</FormLabel>
@@ -158,12 +199,12 @@ export const RegisterPage = () => {
                         {/* TODO: BIRTHDAY */}
                         <FormField
                         control={form.control}
-                        name="birthday"
+                        name="birthDate"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Fecha de Nacimiento</FormLabel>
                             <FormControl>
-                                <Input placeholder="DD-MM-YYYY" {...field} />
+                                <Input placeholder="YYYY-MM-DD" {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>
@@ -188,7 +229,7 @@ export const RegisterPage = () => {
                         {/* TODO: CONFIRM PASSWORD*/}
                         <FormField
                             control={form.control}
-                            name="ConfirmPassword"
+                            name="confirmPassword"
                             render = {({ field }) => (
                                 <FormItem>
                                 <FormLabel>Confirmar Contraseña</FormLabel>

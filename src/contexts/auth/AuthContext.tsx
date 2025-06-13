@@ -1,6 +1,8 @@
+"use client";
+
 import {User} from "@/interfaces/User";
 import { any } from "zod/v4-mini";
-import { authReducer, AuthState } from "./authReducer";
+import { authReducer, AuthState } from "./AuthReducer";
 import { createContext, useReducer } from "react";
 
 type AuthContextProps = {
