@@ -21,9 +21,10 @@ export const ProductDialog = ({ product, open, onClose }: ProductDialogProps) =>
                 </DialogHeader>
 
                 <div className="flex flex-col items-center">
-                    <Image src={product.imageUrl[0]} alt={product.title} width={200} height={200} className="object-contain"/>
-                    <p className="mt-4 text-blue-700 font-bold text-2xl">${product.price}</p>
-                    <p className="mt-2 text-gray-600">{product.description ?? "Sin descripción"}</p>
+                    <Image src={product.imageUrl[0]} alt={product.title} width={200} height={200} className="object-contain rounded-xl"/>
+                    <p className="mt-4 font-bold text-2xl">${product.price}</p>
+                    <p className="mt-2">{product.description ?? "Sin descripción"}</p>
+                    <p className="mt-2 text-sm font-semibold">Stock: {product.stock}</p>
                 </div>           
 
             </DialogContent>

@@ -1,6 +1,7 @@
 import { Product } from "@/interfaces/Products/Product"
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
     product: Product;
@@ -8,17 +9,26 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, onClick }: ProductCardProps) => {
+    const router = useRouter();
     return (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition"
-            onClick={onClick}>
-            <div className="relative w-full h-48 bg-gray-200 flex items-center justify-center">
-                <Image src={product.imageUrl[0]} alt={product.title} width={200} height={200} className="object-contain" />
+        <div className="bg-white rounded-lg overflow-hidden cursor-pointer transition hover:scale-105">
+            <div onClick={onClick}>
+                <div className="relative w-full h-48 bg-gray-200 flex items-center justify-center"
+                >
+                    <Image src={product.imageUrl[0]} alt={product.title} width={200} height={200} className="object-contain" />
+                </div>
+                <div className="p-4">
+                    <h3 className="text-lg font-semibold text-center">
+                        {product.title}
+                    </h3>
+                    <p className="mt-2 font-bold text-xl text-center">${product.price}</p>
+                </div>
             </div>
-            <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800">{product.title}</h3>
-                <p className="mt-2 text-blue-700 font-bold text-xl">${product.price}</p>
-                <Button className="mt-4 w-full">Agregar al carrito</Button>
-            </div>
+            <Button className="mt-4 w-full shadow-md"
+                style={{ backgroundColor: "#D0EBFF", color: "#003D69" }}
+                onClick={() => router.push('login')}>
+                Agregar al carrito
+            </Button>
         </div>
     )
 }

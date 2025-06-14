@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { MarsStroke, MenuIcon, XIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 
 export const Navbar = () => {
@@ -12,9 +14,9 @@ export const Navbar = () => {
     }
 
     return (
-        <nav className="bg-purple-500">
+        <nav style={{ backgroundColor: "#B962DE" }} >
             <link href="https://fonts.googleapis.com/css?family=Inter:400,700,900italic&display=swap" rel="stylesheet"></link>
-            <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+            <div className="max-w-7xl mx-auto py-6 flex justify-between items-center">
                 <div className="text-[50px]"><span className="font-inter-italic">BLACKCAT</span></div>
 
                 {/* Barra de Búsqueda */}
@@ -22,11 +24,13 @@ export const Navbar = () => {
                     <input 
                         type="text" 
                         placeholder="Buscar producto..." 
-                        className="px-4 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        className="px-4 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
-                    <Button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors fa-solid fa-magnifying-glass">
-                        Buscar
-                    </Button>
+                    <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        className="text-white cursor-pointer hover:text-gray-300 text-3xl"
+                        onClick={() => alert('Buscar producto...')}
+                    />
                 </div>
 
                 {/* Desktop Menu */}
