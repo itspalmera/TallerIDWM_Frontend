@@ -242,6 +242,7 @@ export const RegisterPage = () => {
                         )}
                         />
 
+
                         {/* TODO: PASSWORD */}
                         <FormField
                             control={form.control}
@@ -288,12 +289,23 @@ export const RegisterPage = () => {
                         />
 
                         {errorBool && (
-                            <>
-                                <div className="text-red-500 text-sm mt-2 p-2 bg-red-100 rounded">
-                                    {errors}
-                                </div>
-                            </>
-                            
+                        <Alert variant="default" className="border-red-500 bg-red-100 text-red-900 md:col-span-2">
+                            <AlertTitle className="flex items-center gap-2">
+                            <svg
+                                className="h-5 w-5 text-red-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-6h2v4h-2V7z"
+                                clipRule="evenodd"
+                                />
+                            </svg>
+                            ¡Error!
+                            </AlertTitle>
+                            <AlertDescription>{errors}</AlertDescription>
+                        </Alert>
                         )}
 
                         <Button type="submit" className="mt-8 md:col-span-2 justify-self-center" >
