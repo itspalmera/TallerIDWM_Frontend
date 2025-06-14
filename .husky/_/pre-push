@@ -1,3 +1,2 @@
 #!/usr/bin/env sh
-
-echo "husky run pre-commit hook"
+. "$(dirname "$0")/h"
