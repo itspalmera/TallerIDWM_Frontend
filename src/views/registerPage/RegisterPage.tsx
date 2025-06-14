@@ -6,11 +6,14 @@ import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessa
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { use } from "react";
+import { use, useState } from "react";
 import { number, any, email } from 'zod/v4-mini';
 import { ApiBackend } from "@/clients/axios";
 import { ResponseAPI } from "@/interfaces/ResponseAPI";
 import { fi } from "zod/v4/locales";
+import { error } from "console";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Terminal } from "lucide-react";
 
 
 // Definimos el esquema de validación con Zod
@@ -72,8 +75,16 @@ export const RegisterPage = () => {
         },
     });
 
+    const [errors, setErrors] = useState<string | null>(null);
+    const [errorBool, setErrorBool] = useState<boolean>(false);
+
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            setErrorBool(false);
             console.log("Valores enviados en el formulario:", values);
             const data = await ApiBackend.post<ResponseAPI>('Auth/register', values);
             /*
@@ -86,10 +97,21 @@ export const RegisterPage = () => {
             */
             console.log("Respuesta del servidor:", data);
 
+            // Si success es true, mostramos la alerta
+            if (data.data?.success) {
+                setSuccessMessage(data.data.message ?? "Registro exitoso.");
+                setShowSuccessAlert(true);
+            }
+
         }
         
         catch (error: any) {
-            console.error("Error al enviar el formulario:", error);
+            let errorCatch = error.response.data.message;
+            console.error("Error al enviar el formulario:", errorCatch);
+            setErrors(errorCatch);
+            setErrorBool(true);
+            setSuccessMessage(null);
+            setShowSuccessAlert(false);
         }
     }
 
@@ -121,8 +143,32 @@ export const RegisterPage = () => {
                 <div className="w-full max-w-md">
 
                     {/* Titulo y subtitulo */}
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center md:text-left">BlackCat</h2>
-                    <h3 className="text-lg md:text-xl font-medium mb-2 text-center md:text-left">Crea tu cuenta</h3>
+                    <h1 className="text-lg md:text-xl font-medium mb-2 text-center md:text-left">Crea tu cuenta</h1>
+
+                    {showSuccessAlert && (
+                        <Alert variant="default" className="border-green-500 bg-green-100 text-green-900">
+                            <AlertTitle className="flex items-center gap-2">
+                                <svg
+                                className="h-5 w-5 text-green-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                />
+                                </svg>
+                                ¡Registro exitoso!
+                            </AlertTitle>
+                            <AlertDescription>
+                                {successMessage}
+                            </AlertDescription>
+                        </Alert>
+
+                    )}
+
+
 
                     {/* Redireccion a Login */}
                     <p className="mb-4 text-sm text-gray-600 text-center md:text-left">
@@ -134,7 +180,7 @@ export const RegisterPage = () => {
                     
                     {/* Form de Registro */}
                     <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         
                         {/*TODO: USERNAME */}
                         <FormField
@@ -196,21 +242,6 @@ export const RegisterPage = () => {
                         )}
                         />
 
-                        {/* TODO: BIRTHDAY */}
-                        <FormField
-                        control={form.control}
-                        name="birthDate"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>Fecha de Nacimiento</FormLabel>
-                            <FormControl>
-                                <Input placeholder="YYYY-MM-DD" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                            </FormItem>
-                        )}
-                        />
-
                         {/* TODO: PASSWORD */}
                         <FormField
                             control={form.control}
@@ -241,7 +272,34 @@ export const RegisterPage = () => {
                                 )}
                         />
 
-                        <Button type="submit">registrar</Button>
+                        {/* TODO: BIRTHDAY */}
+                        <FormField
+                        control={form.control}
+                        name="birthDate"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Fecha de Nacimiento</FormLabel>
+                            <FormControl>
+                                <Input placeholder="YYYY-MM-DD" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
+                        {errorBool && (
+                            <>
+                                <div className="text-red-500 text-sm mt-2 p-2 bg-red-100 rounded">
+                                    {errors}
+                                </div>
+                            </>
+                            
+                        )}
+
+                        <Button type="submit" className="mt-8 md:col-span-2 justify-self-center" >
+                            Registrar
+                        </Button>
+
                     </form>
                     </Form>
 
