@@ -11,9 +11,9 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     const router = useRouter();
     return (
-        <div className="bg-white rounded-lg overflow-hidden cursor-pointer transition hover:scale-105">
+        <div className="bg-white rounded-lg  cursor-pointer transition hover:scale-105">
             <div onClick={onClick}>
-                <div className="relative w-full h-48 bg-gray-200 flex items-center justify-center"
+                <div className="relative w-full h-32 flex items-center justify-center"
                 >
                     <Image src={product.imageUrl[0]} alt={product.title} width={200} height={200} className="object-contain" />
                 </div>
@@ -24,8 +24,12 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                     <p className="mt-2 font-bold text-xl text-center">${product.price}</p>
                 </div>
             </div>
-            <Button className="mt-4 w-full shadow-md"
-                style={{ backgroundColor: "#D0EBFF", color: "#003D69" }}
+            <Button className="mt-1 w-full"
+                style={{
+                    backgroundColor: "#D0EBFF",
+                    color: "#003D69",
+                    boxShadow: "2px 3px 2px rgba(0,0,0,0.2)"
+                }}
                 onClick={() => router.push('login')}>
                 Agregar al carrito
             </Button>
