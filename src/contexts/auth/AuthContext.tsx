@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {User} from "@/interfaces/User";
 import { any } from "zod/v4-mini";
@@ -27,9 +27,7 @@ export const AuthProvider = ({children}: any) => {
     const [state, dispatch] = useReducer(authReducer, authInitialState);
 
     const auth = (user: User) => {
-        console.log("AuthContext: auth", user)
         dispatch({ type: 'auth', payload: { user } });
-        console.log("AuthContext: auth - user", user);
     }
 
     const logout = () => {

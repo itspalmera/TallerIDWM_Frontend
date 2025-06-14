@@ -1,0 +1,323 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { use, useState } from "react";
+import { number, any, email } from 'zod/v4-mini';
+import { ApiBackend } from "@/clients/axios";
+import { ResponseAPI } from "@/interfaces/ResponseAPI";
+import { fi } from "zod/v4/locales";
+import { error } from "console";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Terminal } from "lucide-react";
+
+
+// Definimos el esquema de validación con Zod
+const formSchema = z.object({
+    name: z.string().min(3, {
+        message: "Username must be at least 3 characters.",
+    }).nonempty({
+        message: "Username is required.",
+    }),
+
+    lastname: z.string().min(3, {
+        message: "Last name must be at least 3 characters.",
+    }).nonempty({
+        message: "Last name is required.",
+    }),
+    
+    email: z.string().email( {
+        message: "Please enter a valid email address.",
+    }).nonempty({
+        message: "Email is required."
+    }),
+
+    phone: z.string().min(9, {
+        message: "Phone number must be at least 10 characters.",
+    }).nonempty({
+        message: "Phone number is required.",
+    }),
+
+    birthDate: z.string().nonempty({ 
+        message: "Birthday is required." }),
+
+
+    password: z.string().min(6, {
+        message: "Password must be at least 6 characters.",
+    }).nonempty({
+        message: "password required.",
+    }),
+
+    confirmPassword: z.string().min(6, {
+        message: "Password must be at least 6 characters.",
+    }).nonempty({
+        message: "password required.",
+    }),
+})
+
+export const RegisterPage = () => {
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            lastname: "",
+            email: "",
+            phone: "",
+            birthDate: "",
+            password: "",
+            confirmPassword: "",
+
+        },
+    });
+
+    const [errors, setErrors] = useState<string | null>(null);
+    const [errorBool, setErrorBool] = useState<boolean>(false);
+
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            setErrorBool(false);
+            console.log("Valores enviados en el formulario:", values);
+            const data = await ApiBackend.post<ResponseAPI>('Auth/register', values);
+            /*
+            const user_ : User = {
+                firstName: data.firtsName,
+                email: data.email,
+                lastName: data.lastName,
+                token : data.token
+            }
+            */
+            console.log("Respuesta del servidor:", data);
+
+            // Si success es true, mostramos la alerta
+            if (data.data?.success) {
+                setSuccessMessage(data.data.message ?? "Registro exitoso.");
+                setShowSuccessAlert(true);
+            }
+
+        }
+        
+        catch (error: any) {
+            let errorCatch = error.response.data.message;
+            console.error("Error al enviar el formulario:", errorCatch);
+            setErrors(errorCatch);
+            setErrorBool(true);
+            setSuccessMessage(null);
+            setShowSuccessAlert(false);
+        }
+    }
+
+
+    return (
+        // Usaremos Axios y cosas aqui 
+        <div className="flex flex-col md:flex-row h-screen">
+
+            {/* Lado izquierdo*/}
+            <div className="md:w-1/2 w-full bg-purple-700 text-white flex flex-col justify-center items-center p-10">
+                
+                <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+                    Bienvenido a <br className="hidden md:block"/> BlackCat
+                </h1>
+
+                <p className="text-base md:text-lg text-justify max-w-md">
+                    Tu tienda favorita con los productos que necesitas al menor precio y mayor calidad.
+                </p>
+
+                <p className="mt-10 text-xs md:text-sm text-gray-200 text-center">
+                    © 2025 BlackCat. Todos los derechos reservados.
+                </p>
+            </div>
+
+
+            {/* Lado derecho */}
+
+            <div className="md:w-1/2 w-full flex flex-col items-center justify-center bg-white px-6 py-10">
+                <div className="w-full max-w-md">
+
+                    {/* Titulo y subtitulo */}
+                    <h1 className="text-lg md:text-xl font-medium mb-2 text-center md:text-left">Crea tu cuenta</h1>
+
+                    {showSuccessAlert && (
+                        <Alert variant="default" className="border-green-500 bg-green-100 text-green-900">
+                            <AlertTitle className="flex items-center gap-2">
+                                <svg
+                                className="h-5 w-5 text-green-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                />
+                                </svg>
+                                ¡Registro exitoso!
+                            </AlertTitle>
+                            <AlertDescription>
+                                {successMessage}
+                            </AlertDescription>
+                        </Alert>
+
+                    )}
+
+
+
+                    {/* Redireccion a Login */}
+                    <p className="mb-4 text-sm text-gray-600 text-center md:text-left">
+                        ¿Ya tienes cuenta?{' '}
+                        <a href="#" className="text-blue-600 hover:underline">
+                            Inicia sesión
+                        </a>.
+                    </p>
+                    
+                    {/* Form de Registro */}
+                    <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        {/*TODO: USERNAME */}
+                        <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Nombre</FormLabel>
+                            <FormControl>
+                                <Input placeholder="nombre" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
+                        {/* TODO: lastName */}
+                        <FormField
+                        control={form.control}
+                        name="lastname"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Apellido</FormLabel>
+                            <FormControl>
+                                <Input placeholder="apellido" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
+                        {/* TODO: EMAIL */}
+                        <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Correo</FormLabel>
+                            <FormControl>
+                                <Input placeholder="correo" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
+                        {/* TODO: PHONE NUMBER */}
+                        <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Numero</FormLabel>
+                            <FormControl>
+                                <Input placeholder="numero" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
+
+                        {/* TODO: PASSWORD */}
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render = {({ field }) => (
+                                <FormItem>
+                                <FormLabel>Contraseña</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="contraseña" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                                )}
+                        />
+
+                        {/* TODO: CONFIRM PASSWORD*/}
+                        <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render = {({ field }) => (
+                                <FormItem>
+                                <FormLabel>Confirmar Contraseña</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="confirmar contraseña" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                                )}
+                        />
+
+                        {/* TODO: BIRTHDAY */}
+                        <FormField
+                        control={form.control}
+                        name="birthDate"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Fecha de Nacimiento</FormLabel>
+                            <FormControl>
+                                <Input placeholder="YYYY-MM-DD" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+
+                        {errorBool && (
+                        <Alert variant="default" className="border-red-500 bg-red-100 text-red-900 md:col-span-2">
+                            <AlertTitle className="flex items-center gap-2">
+                            <svg
+                                className="h-5 w-5 text-red-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-6h2v4h-2V7z"
+                                clipRule="evenodd"
+                                />
+                            </svg>
+                            ¡Error!
+                            </AlertTitle>
+                            <AlertDescription>{errors}</AlertDescription>
+                        </Alert>
+                        )}
+
+                        <Button type="submit" className="mt-8 md:col-span-2 justify-self-center" >
+                            Registrar
+                        </Button>
+
+                    </form>
+                    </Form>
+
+                </div>
+            </div>
+
+        </div>
+    ); 
+}
