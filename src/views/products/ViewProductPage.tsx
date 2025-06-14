@@ -1,6 +1,7 @@
 'use client';
 
 import { ProductCard } from "@/components/Products/ProductCard";
+import { ProductDialog } from "@/components/Products/ProductDialog";
 import { Product } from "@/interfaces/Products/Product";
 import { useProductStore } from "@/stores/ProductStore"
 import { useEffect, useState } from "react";
@@ -31,7 +32,13 @@ export default function ViewProductPage() {
                     />
                 ))}
             </div>
-            
+
+            {/* ProductDialog con Producto Seleccionado */}
+            <ProductDialog 
+                product={selectedProduct}
+                open={!!selectedProduct}
+                onClose={() => setSelectedProduct(null)}
+            />
         </div>
     )
 }
