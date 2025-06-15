@@ -157,7 +157,8 @@ export const LoginPage = () => {
 
                     <div className="m-4 text-sm text-gray-600 text-center md:text-center">
                         ¿No tienes cuenta? {' '}
-                        <a href="register" className=" text-blue-600 hover:text-blue-800 font-semibold hover:underline">
+                        <a href="register"
+                        className="text-[#0055FF] hover:text-blue-800 font-semibold hover:underline">
                             Regístrate
                         </a>
                     </div>

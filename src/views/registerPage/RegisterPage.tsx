@@ -172,7 +172,8 @@ export const RegisterPage = () => {
                     {/* Redireccion a Login */}
                     <p className="mb-4 text-sm text-gray-600 text-center md:text-left">
                         ¿Ya tienes cuenta?{' '}
-                        <a href="login" className="text-blue-600 hover:text-blue-800 font-semibold hover:underline">
+                        <a href="login" 
+                        className="text-[#0055FF] hover:text-blue-800 font-semibold hover:underline">
                             Inicia sesión
                         </a>.
                     </p>
@@ -187,9 +188,9 @@ export const RegisterPage = () => {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="md:text-[20px]">Nombre</FormLabel>
+                                        <FormLabel className="text-lg md:text-[20px]">Nombre</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="nombre" {...field} />
+                                            <Input placeholder="Nombre" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -204,7 +205,7 @@ export const RegisterPage = () => {
                                     <FormItem>
                                         <FormLabel className="text-lg md:text-[20px]">Apellido</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="apellido" {...field} />
+                                            <Input placeholder="Apellido" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -219,7 +220,7 @@ export const RegisterPage = () => {
                                     <FormItem>
                                         <FormLabel className="text-lg md:text-[20px]">Correo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="correo" {...field} />
+                                            <Input placeholder="Correo" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -232,9 +233,9 @@ export const RegisterPage = () => {
                                 name="phone"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Numero</FormLabel>
+                                        <FormLabel className="text-lg md:text-[20px]">Número</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="numero" {...field} />
+                                            <Input placeholder="Número" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -250,7 +251,7 @@ export const RegisterPage = () => {
                                     <FormItem>
                                         <FormLabel className="text-lg md:text-[20px]">Contraseña</FormLabel>
                                         <FormControl>
-                                            <Input type="password" placeholder="contraseña" {...field} />
+                                            <Input type="password" placeholder="Contraseña" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -265,7 +266,7 @@ export const RegisterPage = () => {
                                     <FormItem>
                                         <FormLabel className="text-lg md:text-[20px]">Confirmar Contraseña</FormLabel>
                                         <FormControl>
-                                            <Input type="password" placeholder="confirmar contraseña" {...field} />
+                                            <Input type="password" placeholder="Confirmar Contraseña" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
