@@ -14,6 +14,7 @@ import { fi } from "zod/v4/locales";
 import { error } from "console";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react";
+import { NavbarBase } from "@/components/NavbarBase";
 
 
 // Definimos el esquema de validación con Zod
@@ -119,205 +120,209 @@ export const RegisterPage = () => {
 
     return (
         // Usaremos Axios y cosas aqui 
-        <div className="flex flex-col md:flex-row h-screen">
-
-            {/* Lado Izquierdo */}
-            <div className="md:w-1/2 w-full text-white flex flex-col justify-center items-center p-10"
-                style={{ background: "#8C34D0" }}>
-                <h1 className="text-3xl md:text-[40px] l font-bold mb-12 text-center">
-                    Bienvenido a BlackCat
-                </h1>
-                <p className="text-2xl md:text-[30px] text-center">
-                    Tu tienda favorita con los productos que necesitas al menor precio y mayor calidad
-                </p>
-                <p className="mt-10 text-xs md:text-sm text-gray-200 text-center">
-                    © 2025 BlackCat. Todos los derechos reservados.
-                </p>
-            </div>
+        <div className="min-h-screen bg-white">
+            <NavbarBase />
+            <div className="flex flex-col md:flex-row h-screen">
 
 
-            {/* Lado derecho */}
-
-            <div className="md:w-1/2 w-full flex flex-col items-center justify-center bg-white px-6 py-10">
-                <div className="w-full max-w-md">
-
-                    {/* Titulo y subtitulo */}
-                    <h1 className="text-2xl md:text-[30px] font-medium mb-2 text-center md:text-left">Crea tu cuenta</h1>
-
-                    {showSuccessAlert && (
-                        <Alert variant="default" className="border-green-500 bg-green-100 text-green-900">
-                            <AlertTitle className="flex items-center gap-2">
-                                <svg
-                                    className="h-5 w-5 text-green-600"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                                ¡Registro exitoso!
-                            </AlertTitle>
-                            <AlertDescription>
-                                {successMessage}
-                            </AlertDescription>
-                        </Alert>
-
-                    )}
-
-
-
-                    {/* Redireccion a Login */}
-                    <p className="mb-4 text-sm text-gray-600 text-center md:text-left">
-                        ¿Ya tienes cuenta?{' '}
-                        <a href="login" 
-                        className="text-[#0055FF] hover:text-blue-800 font-semibold hover:underline">
-                            Inicia sesión
-                        </a>.
+                {/* Lado Izquierdo */}
+                <div className="md:w-1/2 w-full text-white flex flex-col justify-center items-center p-10"
+                    style={{ background: "#8C34D0" }}>
+                    <h1 className="text-3xl md:text-[40px] l font-bold mb-12 text-center">
+                        Bienvenido a BlackCat
+                    </h1>
+                    <p className="text-2xl md:text-[30px] text-center">
+                        Tu tienda favorita con los productos que necesitas al menor precio y mayor calidad
                     </p>
-
-                    {/* Form de Registro */}
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                            {/*TODO: USERNAME */}
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Nombre</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Nombre" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* TODO: lastName */}
-                            <FormField
-                                control={form.control}
-                                name="lastname"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Apellido</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Apellido" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* TODO: EMAIL */}
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Correo</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Correo" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* TODO: PHONE NUMBER */}
-                            <FormField
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Número</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Número" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-
-                            {/* TODO: PASSWORD */}
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Contraseña</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="Contraseña" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* TODO: CONFIRM PASSWORD*/}
-                            <FormField
-                                control={form.control}
-                                name="confirmPassword"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Confirmar Contraseña</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="Confirmar Contraseña" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {/* TODO: BIRTHDAY */}
-                            <FormField
-                                control={form.control}
-                                name="birthDate"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-lg md:text-[20px]">Fecha de Nacimiento</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="YYYY-MM-DD" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {errorBool && (
-                                <Alert variant="default" className="border-red-500 bg-red-100 text-red-900 md:col-span-2">
-                                    <AlertTitle className="flex items-center gap-2">
-                                        <svg
-                                            className="h-5 w-5 text-red-600"
-                                            fill="currentColor"
-                                            viewBox="0 0 20 20"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-6h2v4h-2V7z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                        ¡Error!
-                                    </AlertTitle>
-                                    <AlertDescription>{errors}</AlertDescription>
-                                </Alert>
-                            )}
-
-                            <Button type="submit" className="mt-8 md:col-span-2 justify-self-center" >
-                                Registrar
-                            </Button>
-
-                        </form>
-                    </Form>
-
+                    <p className="mt-10 text-xs md:text-sm text-gray-200 text-center">
+                        © 2025 BlackCat. Todos los derechos reservados.
+                    </p>
                 </div>
-            </div>
 
+
+                {/* Lado derecho */}
+
+                <div className="md:w-1/2 w-full flex flex-col items-center justify-center bg-white px-6 py-10">
+                    <div className="w-full max-w-md">
+
+                        {/* Titulo y subtitulo */}
+                        <h1 className="text-2xl md:text-[30px] font-medium mb-2 text-center md:text-left">Crea tu cuenta</h1>
+
+                        {showSuccessAlert && (
+                            <Alert variant="default" className="border-green-500 bg-green-100 text-green-900">
+                                <AlertTitle className="flex items-center gap-2">
+                                    <svg
+                                        className="h-5 w-5 text-green-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                    ¡Registro exitoso!
+                                </AlertTitle>
+                                <AlertDescription>
+                                    {successMessage}
+                                </AlertDescription>
+                            </Alert>
+
+                        )}
+
+
+
+                        {/* Redireccion a Login */}
+                        <p className="mb-4 text-sm text-gray-600 text-center md:text-left">
+                            ¿Ya tienes cuenta?{' '}
+                            <a href="login"
+                                className="text-[#0055FF] hover:text-blue-800 font-semibold hover:underline">
+                                Inicia sesión
+                            </a>.
+                        </p>
+
+                        {/* Form de Registro */}
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                                {/*TODO: USERNAME */}
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Nombre</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Nombre" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* TODO: lastName */}
+                                <FormField
+                                    control={form.control}
+                                    name="lastname"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Apellido</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Apellido" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* TODO: EMAIL */}
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Correo</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Correo" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* TODO: PHONE NUMBER */}
+                                <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Número</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Número" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+
+                                {/* TODO: PASSWORD */}
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Contraseña</FormLabel>
+                                            <FormControl>
+                                                <Input type="password" placeholder="Contraseña" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* TODO: CONFIRM PASSWORD*/}
+                                <FormField
+                                    control={form.control}
+                                    name="confirmPassword"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Confirmar Contraseña</FormLabel>
+                                            <FormControl>
+                                                <Input type="password" placeholder="Confirmar Contraseña" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* TODO: BIRTHDAY */}
+                                <FormField
+                                    control={form.control}
+                                    name="birthDate"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-lg md:text-[20px]">Fecha de Nacimiento</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="YYYY-MM-DD" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {errorBool && (
+                                    <Alert variant="default" className="border-red-500 bg-red-100 text-red-900 md:col-span-2">
+                                        <AlertTitle className="flex items-center gap-2">
+                                            <svg
+                                                className="h-5 w-5 text-red-600"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-6h2v4h-2V7z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                            ¡Error!
+                                        </AlertTitle>
+                                        <AlertDescription>{errors}</AlertDescription>
+                                    </Alert>
+                                )}
+
+                                <Button type="submit" className="mt-8 md:col-span-2 justify-self-center" >
+                                    Registrar
+                                </Button>
+
+                            </form>
+                        </Form>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
     );
 }
