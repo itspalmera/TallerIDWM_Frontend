@@ -37,7 +37,7 @@ export const Navbar = () => {
                 <ul className="hidden md:flex space-x-8 font-medium text-[28px] items-center font-inter-bold">
                     <li><Link href="/" className="hover:text-gray-700">Productos</Link></li>
                     <li><Link href="#" className="hover:text-gray-700">Carrito</Link></li>
-                    <li><Link href="#" className="hover:text-gray-700">Cuenta</Link></li>
+                    <li><Link href="login" className="hover:text-gray-700">Cuenta</Link></li>
                 </ul>
 
 
@@ -54,7 +54,7 @@ export const Navbar = () => {
                     <div className="md:hidden flex flex-col items-center text-[28px] bg-purple-600 space-y-4 py-4 font-inter-bold">
                         <Link href="/" onClick={toggleMenu} className="hover:text-gray-700">Productos</Link>
                         <Link href="#" onClick={toggleMenu} className="hover:text-gray-700">Carrito</Link>
-                        <Link href="#" onClick={toggleMenu} className="hover:text-gray-700">Cuenta</Link>
+                        <Link href="login" onClick={toggleMenu} className="hover:text-gray-700">Cuenta</Link>
                     </div>
                 )}  
         </nav>

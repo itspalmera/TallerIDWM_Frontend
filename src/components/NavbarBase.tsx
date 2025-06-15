@@ -12,6 +12,7 @@ export const NavbarBase = () => {
 
     return (
         <nav style={{ backgroundColor: "#B962DE" }} >
+            <link href="https://fonts.googleapis.com/css?family=Inter:400,700,900italic&display=swap" rel="stylesheet"></link>
             <div className="max-w-7xl mx-auto py-6 flex justify-between items-center">
                 <div className="text-[50px]"><span className="font-inter-italic">BLACKCAT</span></div>
 
