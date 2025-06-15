@@ -1,7 +1,7 @@
 export interface User {
-    name?:       string;
-    lastName?:   string;
-    email?:      string;
+    name:       string;
+    lastName:   string;
+    email:      string;
     phone?:      string;
     street?:     string;
     number?:     string;
@@ -12,6 +12,6 @@ export interface User {
     lastAccess?: Date;
     birthDate?:  Date;
     active?:     boolean;
-    token?:      string;
+    token:      string;
     role?:       string;
 }
