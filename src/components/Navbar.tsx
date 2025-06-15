@@ -24,7 +24,7 @@ export const Navbar = () => {
                     <input 
                         type="text" 
                         placeholder="Buscar producto..." 
-                        className="px-4 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="px-4 border border-gray-300 w-[325px] h-[40px] bg-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
                     <FontAwesomeIcon
                         icon={faMagnifyingGlass}

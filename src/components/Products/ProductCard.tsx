@@ -24,7 +24,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                     <p className="mt-2 font-bold text-xl text-center">${product.price}</p>
                 </div>
             </div>
-            <Button className="mt-1 w-full"
+            <Button className="mt-1 w-full text-[14px]"
                 style={{
                     backgroundColor: "#D0EBFF",
                     color: "#003D69",
