@@ -3,19 +3,47 @@
 import { ProductCard } from "@/components/Products/ProductCard";
 import { ProductDialog } from "@/components/Products/ProductDialog";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Product } from "@/interfaces/Products/Product";
+import { ProductServices } from "@/services/ProductServices";
 import { useProductStore } from "@/stores/ProductStore"
-import { SelectItemText } from "@radix-ui/react-select";
 import { useEffect, useState } from "react";
 
 export default function ViewProductPage() {
-    const { products, loading, filters, fetchProducts } = useProductStore();
+    const { products, loading, filters, fetchProducts, setFilters } = useProductStore();
+
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [allProducts, setAllProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [brands, setBrands] = useState<string[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const all = await ProductServices.fetchProducts({});
+                setAllProducts(all);
+                const cats = Array.from(new Set(all.map(p => p.category))).filter((cat): cat is string => typeof cat === "string");
+                const brds = Array.from(new Set(all.map(p => p.brand))).filter((brd): brd is string => typeof brd === "string");
+                setCategories(cats);
+                setBrands(brds);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         fetchProducts();
     }, [filters]);
+
+    const handleFilterChange = (field: string, value: string) => {
+        const updatedFilters = {
+            ...filters,
+            [field]: value === "all" ? undefined : value
+        };
+        setFilters(updatedFilters);
+    };
 
     if (loading) {
         return <div className="text-center py-20 text-lg font-semibold bg-purple-300">Cargando productos...</div>;
@@ -27,132 +55,111 @@ export default function ViewProductPage() {
             <div className="p-8 mx-auto"
                 style={{ background: "#F1D0FF" }}>
                 <div className="flex flex-wrap gap-12 justify-center items-center">
-                    {/* Filtro Categoría */}
-                    <div className="flex flex-col items-start w-[252px] min-w-[232px] min-h-[38px]">
+
+                    {/* Categoría */}
+                    <div className="flex flex-col items-start w-[252px]">
                         <span className="text-[20px] font-bold mb-1">Categoría</span>
-                        <Select>
-                            <SelectTrigger className="w-full bg-white border border-purple-300 hover:border-purple-400 focus:border-purple-500">
+                        <Select
+                            value={filters.categories || 'all'}
+                            onValueChange={(value) => handleFilterChange('categories', value)}>
+                            <SelectTrigger className="w-full bg-white border border-purple-300">
                                 <SelectValue placeholder="Selecciona" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="categoria1">Categoría 1</SelectItem>
-                                    <SelectItem value="categoria2">Categoría 2</SelectItem>
-                                    <SelectItem value="categoria3">Categoría 3</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {/* Filtro Marca */}
-                    <div className="flex flex-col items-start w-[229px] min-w-[209px] min-h-[38px]">
-                        <span className="text-[20px] font-bold mb-1">Marca</span>
-                        <Select>
-                            <SelectTrigger className="w-full bg-white border border-purple-300 hover:border-purple-400 focus:border-purple-500">
-                                <SelectValue placeholder="Selecciona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="marca1">Marca 1</SelectItem>
-                                    <SelectItem value="marca2">Marca 2</SelectItem>
-                                    <SelectItem value="marca3">Marca 3</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {/* Filtro Rango de Precios */}
-                    <div className="flex flex-col items-start  w-[266px] min-w-[246px] min-h-[38px]">
-                        <span className="text-[20px] font-bold mb-1">Rango de Precios</span>
-                        <Select>
-                            <SelectTrigger className="w-full bg-white border border-purple-300 hover:border-purple-400 focus:border-purple-500">
-                                <SelectValue placeholder="Selecciona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="rango1">$0 - $20.000</SelectItem>
-                                    <SelectItem value="rango2">$20.001 - $50.000</SelectItem>
-                                    <SelectItem value="rango3">$50.001 - $150.000</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {/* Filtro Estado */}
-                    <div className="flex flex-col items-start w-[215px] min-w-[195px] min-h-[38px]">
-                        <span className="text-[20px] font-bold mb-1">Estado</span>
-                        <Select>
-                            <SelectTrigger className="w-full bg-white border border-purple-300 hover:border-purple-400 focus:border-purple-500">
-                                <SelectValue placeholder="Selecciona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="nuevo">Nuevo</SelectItem>
-                                    <SelectItem value="usado">Usado</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {/* Filtro Ordenar por Precio */}
-                    <div className="flex flex-col items-start  w-[200px] min-w-[180px] min-h-[38px]">
-                        <span className="text-[20px] font-bold mb-1">Ordenar por Precio</span>
-                        <Select>
-                            <SelectTrigger className="w-full bg-white border border-purple-300 hover:border-purple-400 focus:border-purple-500">
-                                <SelectValue placeholder="Selecciona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="asc">Menor a Mayor</SelectItem>
-                                    <SelectItem value="desc">Mayor a Menor</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    {/* Filtro Ordenar por Nombre */}
-                    <div className="flex flex-col items-start w-[200px] min-w-[180px] min-h-[38px]">
-                        <span className="text-[20px] font-bold mb-1">Ordenar por Nombre</span>
-                        <Select>
-                            <SelectTrigger className="w-full bg-white border border-purple-300 hover:border-purple-400 focus:border-purple-500">
-                                <SelectValue placeholder="Selecciona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="asc">A - Z</SelectItem>
-                                    <SelectItem value="desc">Z - A</SelectItem>
-                                </SelectGroup>
+                                <SelectItem value="all">Todas</SelectItem>
+                                {categories.map((cat) => (
+                                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
 
+                    {/* Marca */}
+                    <div className="flex flex-col items-start w-[229px]">
+                        <span className="text-[20px] font-bold mb-1">Marca</span>
+                        <Select
+                            value={filters.brands || 'all'}
+                            onValueChange={(value) => handleFilterChange('brands', value)}>
+                            <SelectTrigger className="w-full bg-white border border-purple-300">
+                                <SelectValue placeholder="Selecciona" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todas</SelectItem>
+                                {brands.map((brand) => (
+                                    <SelectItem key={brand} value={brand}>{brand}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Estado */}
+                    <div className="flex flex-col items-start w-[215px]">
+                        <span className="text-[20px] font-bold mb-1">Estado</span>
+                        <Select
+                            value={filters.conditions || 'all'}
+                            onValueChange={(value) => handleFilterChange('conditions', value)}>
+                            <SelectTrigger className="w-full bg-white border border-purple-300">
+                                <SelectValue placeholder="Selecciona" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todos</SelectItem>
+                                <SelectItem value="nuevo">Nuevo</SelectItem>
+                                <SelectItem value="usado">Usado</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Orden por Precio */}
+                    <div className="flex flex-col items-start w-[200px]">
+                        <span className="text-[20px] font-bold mb-1">Ordenar por Precio</span>
+                        <Select
+                            value={filters.sortBy || 'all'}
+                            onValueChange={(value) => handleFilterChange('sortBy', value)}>
+                            <SelectTrigger className="w-full bg-white border border-purple-300">
+                                <SelectValue placeholder="Selecciona" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">-</SelectItem>
+                                <SelectItem value="price">Menor a Mayor</SelectItem>
+                                <SelectItem value="priceDesc">Mayor a Menor</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Orden por Nombre */}
+                    <div className="flex flex-col items-start w-[200px]">
+                        <span className="text-[20px] font-bold mb-1">Ordenar por Nombre</span>
+                        <Select
+                            value={filters.sortBy || 'all'}
+                            onValueChange={(value) => handleFilterChange('sortBy', value)}>
+                            <SelectTrigger className="w-full bg-white border border-purple-300">
+                                <SelectValue placeholder="Selecciona" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">A - Z</SelectItem>
+                                <SelectItem value="nameDesc">Z - A</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
             </div>
-            {/* Products Section */}
-            <div className="max-w-7xl mx-auto p-12 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            {/* Productos */}
+            <div className="max-w-7xl mx-auto p-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {products.map((product) => (
-                    <ProductCard
-                        key={product.title}
-                        product={product}
-                        onClick={() => setSelectedProduct(product)}
-                    />
+                    <ProductCard key={product.title} product={product} onClick={() => setSelectedProduct(product)} />
                 ))}
             </div>
 
-            {/* ProductDialog con Producto Seleccionado */}
-            <ProductDialog
-                product={selectedProduct}
-                open={!!selectedProduct}
-                onClose={() => setSelectedProduct(null)}
-            />
-            {/* Pagination */}
-            <div className="flex flex-col justify-center m-12">
+            <ProductDialog product={selectedProduct} open={!!selectedProduct} onClose={() => setSelectedProduct(null)} />
+
+            {/* Paginación (futura implementación) */}
+            <div className="flex justify-center m-12">
                 <Pagination>
                     <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious href="#" />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink className="px-16 text-[18px]" href="#"> Página 1 </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext href="#" />
-                        </PaginationItem>
+                        <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+                        <PaginationItem><PaginationLink href="#"> Página 1 </PaginationLink></PaginationItem>
+                        <PaginationItem><PaginationNext href="#" /></PaginationItem>
                     </PaginationContent>
                 </Pagination>
             </div>
