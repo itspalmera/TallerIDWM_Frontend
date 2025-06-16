@@ -1,6 +1,5 @@
 'use client';
 
-import { Navbar } from "@/components/Navbar";
 import { ProductCard } from "@/components/Products/ProductCard";
 import { ProductDialog } from "@/components/Products/ProductDialog";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
@@ -52,8 +51,9 @@ export default function ViewProductPage() {
 
     return (
         <div className="min-h-screen">
-            <Navbar />
-            <div className="p-8 mx-auto" style={{ background: "#F1D0FF" }}>
+            {/* Filters bar */}
+            <div className="p-8 mx-auto"
+                style={{ background: "#F1D0FF" }}>
                 <div className="flex flex-wrap gap-12 justify-center items-center">
 
                     {/* Categoría */}
