@@ -35,6 +35,13 @@ Puedes encontrar el repositorio del backend en el siguiente enlace:
 
 ## 🚀 Instalación
 
+### Navega al directorio del proyecto:
+
+```bash
+cd TallerIDWM_Frontend
+```
+
+
 ### Clonar el repositorio
 
 ```bash
