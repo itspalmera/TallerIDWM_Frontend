@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { NavbarBase } from "@/components/NavbarBase";
 import z from "zod";
 import { set } from "zod/v4-mini";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -42,6 +43,8 @@ export const LoginPage = () => {
 
     const { auth } = useContext(AuthContext);
 
+    const router = useRouter();
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             console.log("Valores enviados en formulario:", values);
@@ -66,6 +69,7 @@ export const LoginPage = () => {
 
             console.log("Datos del usuario:", user_);
             auth(user_);
+            router.push('/');
         }
         catch (error: any) {
             let errorCatch = error.response.data.message
