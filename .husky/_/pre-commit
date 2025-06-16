@@ -1,3 +1,2 @@
 #!/usr/bin/env sh
-
-echo "husky run"
+. "$(dirname "$0")/h"
