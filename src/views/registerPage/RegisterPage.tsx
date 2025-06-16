@@ -20,44 +20,44 @@ import { NavbarBase } from "@/components/NavbarBase";
 // Definimos el esquema de validación con Zod
 const formSchema = z.object({
     name: z.string().min(3, {
-        message: "Username must be at least 3 characters.",
+        message: "El nombre debe tener al menos 3 caracteres.",
     }).nonempty({
-        message: "Username is required.",
+        message: "Nombre es requerido.",
     }),
 
     lastname: z.string().min(3, {
-        message: "Last name must be at least 3 characters.",
+        message: "El apellido debe tener al menos 3 caracteres.",
     }).nonempty({
-        message: "Last name is required.",
+        message: "Apellido es requerido.",
     }),
 
     email: z.string().email({
-        message: "Please enter a valid email address.",
+        message: "Ingrese un correo electrónico válido.",
     }).nonempty({
-        message: "Email is required."
+        message: "Email es requerido."
     }),
 
     phone: z.string().min(9, {
-        message: "Phone number must be at least 10 characters.",
+        message: "El número de teléfono debe tener al menos 9 caracteres.",
     }).nonempty({
-        message: "Phone number is required.",
+        message: "Numero de teléfono es requerido.",
     }),
 
     birthDate: z.string().nonempty({
-        message: "Birthday is required."
+        message: "Fecha de nacimiento es requerida.",
     }),
 
 
     password: z.string().min(6, {
-        message: "Password must be at least 6 characters.",
+        message: "Contraseña debe tener al menos 6 caracteres.",
     }).nonempty({
-        message: "password required.",
+        message: "Contraseña es requerida.",
     }),
 
     confirmPassword: z.string().min(6, {
-        message: "Password must be at least 6 characters.",
+        message: "Confirmar contraseña debe tener al menos 6 caracteres.",
     }).nonempty({
-        message: "password required.",
+        message: "Confirmar contraseña es requerida.",
     }),
 })
 
@@ -224,7 +224,7 @@ export const RegisterPage = () => {
                                         <FormItem>
                                             <FormLabel className="text-lg md:text-[20px]">Correo</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Correo" {...field} />
+                                                <Input placeholder="correo@blackcat.com" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -237,9 +237,9 @@ export const RegisterPage = () => {
                                     name="phone"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="text-lg md:text-[20px]">Número</FormLabel>
+                                            <FormLabel className="text-lg md:text-[20px]">Celular</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Número" {...field} />
+                                                <Input placeholder="123456789" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -312,10 +312,10 @@ export const RegisterPage = () => {
                                     </Alert>
                                 )}
 
-                                <Button type="submit" className="mt-8 md:col-span-2 justify-self-center" >
-                                    Registrar
+                                <Button type="submit" className="md:w-full mt-8 md:col-span-2 justify-self-center" >
+                                    Registrarse
                                 </Button>
-
+                                
                             </form>
                         </Form>
 

@@ -99,12 +99,17 @@ export const LoginPage = () => {
                 <div className="md:w-1/2 w-full flex items-center justify-center bg-white px-6 py-10">
                     <div className="w-full max-w-md">
                         {/* Título y Subtítulo */}
-                        <h2 className="text-3xl md:text-[40px] font-bold mb-4 text-center">
-                            BlackCat
-                        </h2>
-                        <h3 className="text-2xl md:text-[30px] font-semibold mb-4 text-center">
+                        <h1 className="text-2xl md:text-[30px] font-medium mb-2 text-center md:text-left">
                             Iniciar Sesión
-                        </h3>
+                        </h1>
+
+                        <div className="mt-2 mb-8  text-sm text-gray-600 text-center md:text-left">
+                            ¿No tienes cuenta? {' '}
+                            <a href="register"
+                                className="text-[#0055FF] hover:text-blue-800 font-semibold hover:underline">
+                                Regístrate
+                            </a>
+                        </div>
 
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -115,7 +120,7 @@ export const LoginPage = () => {
                                         <FormItem>
                                             <FormLabel className="text-lg md:text-[20px]">Correo Electrónico</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="" {...field} />
+                                                <Input placeholder="correo@blackcat.com" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -155,17 +160,12 @@ export const LoginPage = () => {
                                     </Alert>
                                 )}
 
+
                                 <Button type="submit" className="md:w-full flex items-center justify-center">Iniciar Sesión</Button>
                             </form>
                         </Form>
 
-                        <div className="m-4 text-sm text-gray-600 text-center md:text-center">
-                            ¿No tienes cuenta? {' '}
-                            <a href="register"
-                                className="text-[#0055FF] hover:text-blue-800 font-semibold hover:underline">
-                                Regístrate
-                            </a>
-                        </div>
+                        
 
                     </div>
                 </div>
