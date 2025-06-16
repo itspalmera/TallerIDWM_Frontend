@@ -17,7 +17,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
     products: [],
     loading: false,
     error: null,
-    filters: { pageNumber: 1, pageSize: 10 },
+    filters: { pageNumber: 1, pageSize: 10, search: "", categories: undefined, brands: undefined, sortBy: undefined },
     fetchProducts: async () => {
         set({ loading: true, error: null });
         try {
