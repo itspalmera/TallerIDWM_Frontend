@@ -52,7 +52,7 @@ export default function Navbar() {
         {/* Navegación */}
         <nav className="flex gap-6 font-semibold">
           <Link href="/">Productos</Link>
-          <Link href="carrito">Carrito</Link>
+          <Link href="login">Carrito</Link>
           <Link href="login">Cuenta</Link>
         </nav>
       </div>
