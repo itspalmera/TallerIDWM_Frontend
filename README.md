@@ -47,6 +47,21 @@ git clone https://github.com/itspalmera/TallerIDWM_Frontend.git
 npm install
 ```
 
+### Configuración del Entorno
+
+Antes de ejecutar el proyecto, asegúrate de configurar correctamente tus variables de entorno:
+
+1. Crea un archivo `.env` en la raíz del proyecto.
+2. Copia el contenido del archivo `.env.example` como base.
+3. Completa los campos necesarios:
+
+URL local donde se ejecuta el frontend (ej: http://localhost:5000/api)
+
+Dominio del backend (ej: localhost)
+
+> 🛠️ Estos valores son esenciales para que la aplicación funcione correctamente en tu entorno local.
+
+
 ## Ejecutar el proyecto
 
 ```bash
