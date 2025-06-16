@@ -11,7 +11,6 @@ import { User } from "@/interfaces/User";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavbarBase } from "@/components/NavbarBase";
 import z from "zod";
 import { set } from "zod/v4-mini";
 
@@ -79,7 +78,6 @@ export const LoginPage = () => {
     return (
         <div className="min-h-screen bg-white">
             {/* NavbarBase fuera del flex de los lados */}
-            <NavbarBase />
             <div className="flex flex-col md:flex-row h-[calc(100vh-64px)]">
                 {/* Lado Izquierdo */}
                 <div className="md:w-1/2 w-full text-white flex flex-col justify-center items-center p-10"
@@ -164,8 +162,6 @@ export const LoginPage = () => {
                                 <Button type="submit" className="md:w-full flex items-center justify-center">Iniciar Sesión</Button>
                             </form>
                         </Form>
-
-                        
 
                     </div>
                 </div>

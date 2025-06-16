@@ -14,7 +14,6 @@ import { fi } from "zod/v4/locales";
 import { error } from "console";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Terminal } from "lucide-react";
-import { NavbarBase } from "@/components/NavbarBase";
 
 
 // Definimos el esquema de validación con Zod
@@ -121,7 +120,6 @@ export const RegisterPage = () => {
     return (
         // Usaremos Axios y cosas aqui 
         <div className="min-h-screen bg-white">
-            <NavbarBase />
             <div className="flex flex-col md:flex-row h-screen">
 
 
