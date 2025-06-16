@@ -96,8 +96,8 @@ export default function ViewProductPage() {
                     <div className="flex flex-col items-start w-[215px]">
                         <span className="text-[20px] font-bold mb-1">Estado</span>
                         <Select
-                            value={filters.status || 'all'}
-                            onValueChange={(value) => handleFilterChange('status', value)}>
+                            value={filters.conditions || 'all'}
+                            onValueChange={(value) => handleFilterChange('conditions', value)}>
                             <SelectTrigger className="w-full bg-white border border-purple-300">
                                 <SelectValue placeholder="Selecciona" />
                             </SelectTrigger>
