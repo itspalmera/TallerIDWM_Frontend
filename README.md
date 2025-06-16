@@ -35,17 +35,16 @@ Puedes encontrar el repositorio del backend en el siguiente enlace:
 
 ## 🚀 Instalación
 
-### Navega al directorio del proyecto:
-
-```bash
-cd TallerIDWM_Frontend
-```
-
-
 ### Clonar el repositorio
 
 ```bash
 git clone https://github.com/itspalmera/TallerIDWM_Frontend.git
+```
+
+### Navega al directorio del proyecto:
+
+```bash
+cd TallerIDWM_Frontend
 ```
 
 ### Instalación de dependencias
@@ -62,7 +61,7 @@ Antes de ejecutar el proyecto, asegúrate de configurar correctamente tus variab
 2. Copia el contenido del archivo `.env.example` como base.
 3. Completa los campos necesarios:
 
-URL local donde se ejecuta el backend (ej: http://localhost:5000/api/)
+URL local donde se ejecuta el backend (ej: "http://localhost:5000/api/")
 
 Dominio del backend (ej: localhost)
 
