@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { LoginDialog } from "./LoginDialog";
 import { useState } from "react";
+import { useCartStore } from "@/stores/CartStore";
 
 interface ProductCardProps {
     product: Product;
@@ -12,20 +13,20 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product, onClick }: ProductCardProps) => {
 
-    // const { addToCart } = useCartStore();
+    const { addToCart } = useCartStore();
 
-    // const { user } = useAuth();
-    // const [showDialog, setShowDialog] = useState(false);
+    const { user } = useAuth();
+    const [showDialog, setShowDialog] = useState(false);
 
-    // const handleAddToCart = (e: React.MouseEvent) => {
-    //     e.stopPropagation();
-    //     if (!user) {
-    //         setShowDialog(true);
-    //         return;       
-    //     }
-    //     addToCart(product.title, 1);
-    //     alert(`Producto ${product.title} agregado al carrito`);
-    // }
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!user) {
+            setShowDialog(true);
+            return;       
+        }
+        addToCart(product.id, 1);
+        alert(`Producto ${product.title} agregado al carrito`);
+    }
 
     const router = useRouter();
     return (
@@ -58,4 +59,8 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
             {/* <LoginDialog open={showDialog} onClose={() => setShowDialog(false)}/> */}
         </div>
     )
+}
+
+function useAuth(): { user: any; } {
+    throw new Error("Function not implemented.");
 }
