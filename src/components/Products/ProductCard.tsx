@@ -2,6 +2,8 @@ import { Product } from "@/interfaces/Products/Product"
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { LoginDialog } from "./LoginDialog";
+import { useState } from "react";
 
 interface ProductCardProps {
     product: Product;
@@ -13,14 +15,15 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     // const { addToCart } = useCartStore();
 
     // const { user } = useAuth();
+    // const [showDialog, setShowDialog] = useState(false);
 
     // const handleAddToCart = (e: React.MouseEvent) => {
     //     e.stopPropagation();
     //     if (!user) {
-    //         alert("Debes iniciar sesión para agregar productos al carrito");
+    //         setShowDialog(true);
     //         return;       
     //     }
-    //     // addToCart(product.title, 1);
+    //     addToCart(product.title, 1);
     //     alert(`Producto ${product.title} agregado al carrito`);
     // }
 
@@ -46,10 +49,13 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                         color: "#003D69",
                         boxShadow: "2px 3px 2px rgba(0,0,0,0.2)"
                     }}
-                    onClick={() => router.push('login')}>
+                    // onClick={handleAddToCart}
+                    >
                     Agregar al carrito
                 </Button>
             </div>
+
+            {/* <LoginDialog open={showDialog} onClose={() => setShowDialog(false)}/> */}
         </div>
     )
 }
