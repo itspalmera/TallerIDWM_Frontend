@@ -45,7 +45,7 @@ export const LoginPage = () => {
 
     const router = useRouter();
 
-     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             console.log("Valores enviados en formulario:", values);
             const { data } = await ApiBackend.post<ResponseAPI>('auth/login', values);
@@ -90,7 +90,10 @@ export const LoginPage = () => {
             }
         }
         catch (error: any) {
-            let errorCatch = error.response.data.message
+            let errorCatch =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Error desconocido al enviar el formulario";
             console.error("Error al enviar el formulario:", errorCatch);
             setErrors(errorCatch);
             setErrorBool(true);
