@@ -83,10 +83,10 @@ export const LoginPage = () => {
             auth(user_);
             if (payload.role === 'Admin') {
                 // Redirigir al dashboard de administrador
-                router.push('/')
+                router.push('/admin')
             } else if (payload.role === 'User') {
                 // Redirigir al dashboard de usuario
-                router.push('/')
+                router.push('/client')
             }
         }
         catch (error: any) {
