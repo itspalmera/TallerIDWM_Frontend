@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { set } from "zod/v4-mini";
 import { useRouter } from "next/navigation";
+import { decodeJWT } from "@/helpers/decodeJWT";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -59,19 +60,40 @@ export const LoginPage = () => {
             setErrorBool(false);
 
             const data_ = data.data;
+            const payload = decodeJWT(data_.token);
+            if (!payload) {
+                console.error("Error al decodificar el token JWT");
+                setErrors("Error al decodificar el token JWT");
+                setErrorBool(true);
+                return;
+            }
+
             const user_: User = {
                 email: data_.email,
                 lastName: data_.lastName,
                 name: data_.name,
                 token: data_.token,
+                role: payload.role,
             }
+
+            // Guardar el token en localStorage
+            localStorage.setItem('token', data_.token);
 
             console.log("Datos del usuario:", user_);
             auth(user_);
-            router.push('/');
+            if (payload.role === 'Admin') {
+                // Redirigir al dashboard de administrador
+                router.push('/admin')
+            } else if (payload.role === 'User') {
+                // Redirigir al dashboard de usuario
+                router.push('/client')
+            }
         }
         catch (error: any) {
-            let errorCatch = error.response.data.message
+            let errorCatch =
+                error?.response?.data?.message ||
+                error?.message ||
+                "Error desconocido al enviar el formulario";
             console.error("Error al enviar el formulario:", errorCatch);
             setErrors(errorCatch);
             setErrorBool(true);
