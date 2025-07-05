@@ -25,7 +25,7 @@ export const CartPage = () => {
                 console.error("Error al crear el pedido:", error);
                 alert("Hubo un error al realizar el pedido. Inténtalo de nuevo más tarde.");
             });
-        console.log(`Pedido realizado exitosamente. Total a pagar: $${totalPrice}`);
+        alert(`Pedido realizado exitosamente. Total a pagar: $${totalPrice}`);
     };
 
     return (
@@ -40,13 +40,9 @@ export const CartPage = () => {
                 <div className="bg-white p-6 rounded shadow h-fit">
                     <h2 className="text-lg font-bold mb-4">Resumen de Compra</h2>
                     <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                            <span>Total:</span>
-                            <span>$ {totalPrice.toFixed(2)}</span>
-                        </div>
                         <div className="flex justify-between font-bold text-lg border-t pt-2">
                             <span>TOTAL:</span>
-                            <span>$ {totalPrice.toFixed(2)}</span>
+                            <span>$ {totalPrice}</span>
                         </div>
                     </div>
                     <div className="mt-6 space-y-2">

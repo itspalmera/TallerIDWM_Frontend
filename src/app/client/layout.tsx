@@ -26,10 +26,11 @@ export default function ClientLayout({children}: {children: React.ReactNode}) {
     if (status === 'checking' || !user) return <div>Cargando...</div>;
 
     return (
-        <html lang ="en">
+        <div>
+            <h1>Client panel</h1>
             <main>
                 {children}
-            </main>                
-        </html>
+            </main>
+        </div>
     )
 }
