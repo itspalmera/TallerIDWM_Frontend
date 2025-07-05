@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { LoginDialog } from "./LoginDialog";
 import { useState } from "react";
 import { useCartStore } from "@/stores/CartStore";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ProductCardProps {
     product: Product;
@@ -50,17 +51,14 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                         color: "#003D69",
                         boxShadow: "2px 3px 2px rgba(0,0,0,0.2)"
                     }}
-                    // onClick={handleAddToCart}
+                    onClick={handleAddToCart}
                     >
                     Agregar al carrito
                 </Button>
             </div>
 
-            {/* <LoginDialog open={showDialog} onClose={() => setShowDialog(false)}/> */}
+            <LoginDialog open={showDialog} onClose={() => setShowDialog(false)}/>
         </div>
     )
 }
 
-function useAuth(): { user: any; } {
-    throw new Error("Function not implemented.");
-}
