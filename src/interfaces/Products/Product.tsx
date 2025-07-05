@@ -9,12 +9,12 @@ export interface Product {
     brand?: string;
 }
 
-export interface CartItem {
+export interface CartItem extends Product {
     productId: number;
     name: string;
     quantity: number;
     price: number;
-    imageUrl: string;
+    imageUrl: string[];
     category: string;
     brand: string;
 }
