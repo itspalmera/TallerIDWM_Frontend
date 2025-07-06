@@ -11,6 +11,7 @@ interface ProductState {
     filters: ProductFilters;
     fetchProducts: () => Promise<void>;
     setFilters: (filters: Partial<ProductFilters>) => void;
+    addProduct: (formData: FormData) => Promise<void>;
 }
 
 export const useProductStore = create<ProductState>((set, get) => ({
@@ -24,15 +25,24 @@ export const useProductStore = create<ProductState>((set, get) => ({
             const { filters } = get();
             const data = await ProductServices.fetchProducts(filters);
             console.log("Productos obtenidos:", data);
-            set({ products: data, loading: false})
+            set({ products: data, loading: false })
         } catch (error: any) {
             set({ loading: false, error: error.message || "Error al obtener los productos." });
         }
     },
-    setFilters: (newFilters) => 
+    setFilters: (newFilters) =>
         set((state) => ({
             filters: { ...state.filters, ...newFilters }
-        }))
+        })),
+    addProduct: async (formData: FormData) => {
+        try {
+            await ProductServices.createProduct(formData);
+            await get().fetchProducts();
+        } catch (error: any) {
+            console.error("Error al crear producto:", error);
+            throw new Error(error.message || "No se pudo crear el producto");
+        }
+    }
 }));
 
-// TODO: Add the rest of the methods to manage the products, such as add, update, delete, etc.
+// TODO: Add the rest of the methods to manage the products, such as update, delete, etc.
