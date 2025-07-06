@@ -76,6 +76,16 @@ export const LoginPage = () => {
                 role: payload.role,
             }
 
+            const fullUser = {
+                ...user_,
+                token: data_.token, // nos aseguramos que esté dentro del objeto
+            };
+
+            localStorage.setItem("user", JSON.stringify(fullUser));
+            localStorage.setItem("token", fullUser.token);
+            auth(fullUser);
+
+
             // Guardar el token en localStorage
             localStorage.setItem('token', data_.token);
 
@@ -83,10 +93,12 @@ export const LoginPage = () => {
             auth(user_);
             if (payload.role === 'Admin') {
                 // Redirigir al dashboard de administrador
-                router.push('/admin')
-            } else if (payload.role === 'User') {
+                router.push('/admin/userList');
+            } 
+            
+            else if (payload.role === 'User') {
                 // Redirigir al dashboard de usuario
-                router.push('/client')
+                router.push('/client/changePassword')
             }
         }
         catch (error: any) {
