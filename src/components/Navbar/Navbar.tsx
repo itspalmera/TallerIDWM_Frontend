@@ -14,7 +14,7 @@ export default function Navbar() {
   const router = useRouter()
 
   const { items: cart } = useCartStore();
-  const { user } = useAuth();
+  const { user, logout} = useAuth();
   const [search, setSearch] = useState("")
 
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
@@ -22,7 +22,7 @@ export default function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (search.trim()) {
-      router.push(`/productos?search=${encodeURIComponent(search)}`)
+      router.push('/productos?search=${encodeURIComponent(search)}')
     }
   }
 
@@ -57,31 +57,103 @@ export default function Navbar() {
         )}
 
         {/* Navegación */}
-        <nav className="flex items-center gap-6 font-semibold ">
-          <Link href="/">Productos</Link>
-          <Link href="login">Carrito</Link>
-          {user ? (
-            <Link href="/" className="flex items-center hover:bg-blue-400 rounded-full p-2 transition-all">
-              <UserIcon className="w-6 h-6" />
-              <span className="ml-2">{user.name}</span>
+        
+        <nav className="flex items-center gap-6 font-semibold">
+
+        {/* NO AUTENTICADO */}
+        {!user && (
+          <>
+            {/* Productos */}
+            <Link href="/">Productos</Link>
+            
+            {/* Carrito */}
+            <Link
+              href="/login"
+              className="relative flex items-center hover:bg-purple-400 rounded-full p-2 transition-all"
+            >
+              <ShoppingCartIcon className="w-6 h-6" />
             </Link>
-          ) : <Link href="/login">
-            <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full">
-              <UserIcon /> Iniciar sesión
-            </Button>
-          </Link>
-          }
-          <Link href={'/cart'} className="relative flex items-center hover:bg-blue-400 rounded-full p-2 transition-all">
-            <ShoppingCartIcon className="w-6 h-6" />
-            {
-              totalItems > 0 && (
+
+            {/* Iniciar sesión */}
+            <Link href="/login">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                <UserIcon className="w-4 h-4 mr-2" /> Iniciar sesión
+              </Button>
+            </Link>
+          </>
+        )}
+
+        {/* CLIENTE */}
+        {user?.role === 'User' && (
+          <>
+            {/* Productos */}
+            <Link href="/">Productos</Link>
+            
+            {/* Carrito */}
+            <Link
+              href="/cart"
+              className="relative flex items-center hover:bg-purple-400 rounded-full p-2 transition-all"
+            >
+              <ShoppingCartIcon className="w-6 h-6" />
+              {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2">
                   {totalItems}
                 </span>
-              )
-            }
-          </Link>
-        </nav>
+              )}
+            </Link>
+
+            {/* Perfil */}
+            <Link href="/client/editProfile">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                <UserIcon className="w-2 h-2 mr-2" />
+                {user.name}
+              </Button>
+            </Link>
+
+            {/* Cerrar sesión */}
+            <Button 
+              onClick={() => {
+                logout();
+                router.push('/login');
+              }} 
+              className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
+            >
+              Cerrar sesión
+            </Button>
+          </>
+        )}
+
+        {/* ADMIN */}
+        {user?.role === 'Admin' && (
+          <>
+            {/* Productos */}
+            <Link href="/admin/products">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                Gestionar Productos
+              </Button>
+            </Link>
+            
+            {/* Clientes */}
+            <Link href="/admin/clients">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                Clientes
+              </Button>
+            </Link>
+
+            {/* Cerrar sesión */}
+            <Button
+              onClick={() => {
+                logout();
+                router.push('/login');
+              }} 
+              className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
+            >
+              Cerrar sesión
+            </Button>
+          </>
+        )}
+      </nav>
+
       </div>
     </header>
   )
