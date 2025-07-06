@@ -2,25 +2,27 @@
 
 import { ProductCard } from "@/components/Products/ProductCard";
 import { ProductDialog } from "@/components/Products/ProductDialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Product } from "@/interfaces/Products/Product";
 import { ProductServices } from "@/services/ProductServices";
 import { useProductStore } from "@/stores/ProductStore"
 import { useEffect, useState } from "react";
 
 export default function ViewProductPage() {
-    const { products, loading, filters, fetchProducts, setFilters } = useProductStore();
+    const { products, loading, filters, fetchProducts, setFilters, metadata } = useProductStore();
 
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [allProducts, setAllProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [brands, setBrands] = useState<string[]>([]);
+    const [localMinPrice, setLocalMinPrice] = useState<string>("");
+    const [localMaxPrice, setLocalMaxPrice] = useState<string>("");
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const all = await ProductServices.fetchProducts({});
+                const { products: all } = await ProductServices.fetchProducts({});
                 setAllProducts(all);
                 const cats = Array.from(new Set(all.map(p => p.category))).filter((cat): cat is string => typeof cat === "string");
                 const brds = Array.from(new Set(all.map(p => p.brand))).filter((brd): brd is string => typeof brd === "string");
@@ -37,12 +39,29 @@ export default function ViewProductPage() {
         fetchProducts();
     }, [filters]);
 
+    useEffect(() => {
+        setLocalMinPrice(filters.minPrice?.toString() ?? "");
+        setLocalMaxPrice(filters.maxPrice?.toString() ?? "");
+    }, [filters.minPrice, filters.maxPrice]);
+
     const handleFilterChange = (field: string, value: string) => {
         const updatedFilters = {
             ...filters,
             [field]: value === "all" ? undefined : value
         };
         setFilters(updatedFilters);
+    };
+
+    const handlePrevPage = () => {
+        if (metadata && metadata.currentPage > 1) {
+            setFilters({ pageNumber: metadata.currentPage - 1 });
+        }
+    };
+
+    const handleNextPage = () => {
+        if (metadata && metadata.currentPage < metadata.totalPages) {
+            setFilters({ pageNumber: metadata.currentPage + 1 });
+        }
     };
 
     if (loading) {
@@ -141,6 +160,42 @@ export default function ViewProductPage() {
                             </SelectContent>
                         </Select>
                     </div>
+
+                    {/* Rango de precios */}
+                    <div className="flex flex-col items-start w-[420px]">
+                        <span className="text-[20px] font-bold mb-1">Rango de precios</span>
+                        <div className="flex gap-2 w-full">
+                            <input
+                                type="number"
+                                min={0}
+                                value={localMinPrice}
+                                onChange={e => setLocalMinPrice(e.target.value)}
+                                className="bg-white border border-purple-300 p-2 rounded w-1/2"
+                                placeholder="Mínimo"
+                            />
+                            <input
+                                type="number"
+                                min={0}
+                                value={localMaxPrice}
+                                onChange={e => setLocalMaxPrice(e.target.value)}
+                                className="bg-white border border-purple-300 p-2 rounded w-1/2"
+                                placeholder="Máximo"
+                            />
+                            <button
+                                className="bg-purple-500 text-white font-semibold px-4 py-2 rounded hover:bg-purple-600 transition-colors"
+                                onClick={() => {
+                                    setFilters({
+                                        ...filters,
+                                        minPrice: localMinPrice ? Number(localMinPrice) : undefined,
+                                        maxPrice: localMaxPrice ? Number(localMaxPrice) : undefined,
+                                        pageNumber: 1
+                                    });
+                                }}
+                            >
+                                Filtrar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -157,9 +212,41 @@ export default function ViewProductPage() {
             <div className="flex justify-center m-12">
                 <Pagination>
                     <PaginationContent>
-                        <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
-                        <PaginationItem><PaginationLink href="#"> Página 1 </PaginationLink></PaginationItem>
-                        <PaginationItem><PaginationNext href="#" /></PaginationItem>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                href='#'
+                                onClick={e => {
+                                    e.preventDefault();
+                                    if (metadata && metadata.currentPage > 1) {
+                                        handlePrevPage();
+                                    }
+                                }}
+                                className={
+                                    !metadata || metadata.currentPage <= 1
+                                        ? "pointer-events-none opacity-50"
+                                        : ""
+                                }
+                            />
+                        </PaginationItem>
+                        <span className="px-2">
+                            Página {metadata ? metadata.currentPage : 1}
+                        </span>
+                        <PaginationItem>
+                            <PaginationNext
+                                href='#'
+                                onClick={e => {
+                                    e.preventDefault();
+                                    if (metadata && metadata.currentPage < metadata.totalPages) {
+                                        handleNextPage();
+                                    }
+                                }}
+                                className={
+                                    !metadata || metadata.currentPage >= metadata.totalPages
+                                        ? "pointer-events-none opacity-50"
+                                        : ""
+                                }
+                            />
+                        </PaginationItem>
                     </PaginationContent>
                 </Pagination>
             </div>
