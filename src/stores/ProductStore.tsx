@@ -40,6 +40,9 @@ export const useProductStore = create<ProductState>((set, get) => ({
             await get().fetchProducts();
         } catch (error: any) {
             console.error("Error al crear producto:", error);
+            if (error.response) {
+                console.error("Detalles del backend:", error.response.data);
+            }
             throw new Error(error.message || "No se pudo crear el producto");
         }
     }
