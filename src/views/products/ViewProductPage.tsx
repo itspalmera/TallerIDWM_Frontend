@@ -2,7 +2,7 @@
 
 import { ProductCard } from "@/components/Products/ProductCard";
 import { ProductDialog } from "@/components/Products/ProductDialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Product } from "@/interfaces/Products/Product";
 import { ProductServices } from "@/services/ProductServices";
@@ -10,7 +10,7 @@ import { useProductStore } from "@/stores/ProductStore"
 import { useEffect, useState } from "react";
 
 export default function ViewProductPage() {
-    const { products, loading, filters, fetchProducts, setFilters } = useProductStore();
+    const { products, loading, filters, fetchProducts, setFilters, metadata } = useProductStore();
 
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [allProducts, setAllProducts] = useState<Product[]>([]);
@@ -20,7 +20,7 @@ export default function ViewProductPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const all = await ProductServices.fetchProducts({});
+                const { products: all } = await ProductServices.fetchProducts({});
                 setAllProducts(all);
                 const cats = Array.from(new Set(all.map(p => p.category))).filter((cat): cat is string => typeof cat === "string");
                 const brds = Array.from(new Set(all.map(p => p.brand))).filter((brd): brd is string => typeof brd === "string");
@@ -37,12 +37,28 @@ export default function ViewProductPage() {
         fetchProducts();
     }, [filters]);
 
+    useEffect(() => {
+        console.log("Metadata:", metadata);
+    }, [metadata]);
+
     const handleFilterChange = (field: string, value: string) => {
         const updatedFilters = {
             ...filters,
             [field]: value === "all" ? undefined : value
         };
         setFilters(updatedFilters);
+    };
+
+    const handlePrevPage = () => {
+        if (metadata && metadata.currentPage > 1) {
+            setFilters({ pageNumber: metadata.currentPage - 1 });
+        }
+    };
+
+    const handleNextPage = () => {
+        if (metadata && metadata.currentPage < metadata.totalPages) {
+            setFilters({ pageNumber: metadata.currentPage + 1 });
+        }
     };
 
     if (loading) {
@@ -157,9 +173,41 @@ export default function ViewProductPage() {
             <div className="flex justify-center m-12">
                 <Pagination>
                     <PaginationContent>
-                        <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
-                        <PaginationItem><PaginationLink href="#"> Página 1 </PaginationLink></PaginationItem>
-                        <PaginationItem><PaginationNext href="#" /></PaginationItem>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                href='#'
+                                onClick={e => {
+                                    e.preventDefault();
+                                    if (metadata && metadata.currentPage > 1) {
+                                        handlePrevPage();
+                                    }
+                                }}
+                                className={
+                                    !metadata || metadata.currentPage <= 1
+                                        ? "pointer-events-none opacity-50"
+                                        : ""
+                                }
+                            />
+                        </PaginationItem>
+                        <span className="px-2">
+                            Página {metadata ? metadata.currentPage : 1}
+                        </span>
+                        <PaginationItem>
+                            <PaginationNext
+                                href='#'
+                                onClick={e => {
+                                    e.preventDefault();
+                                    if (metadata && metadata.currentPage < metadata.totalPages) {
+                                        handleNextPage();
+                                    }
+                                }}
+                                className={
+                                    !metadata || metadata.currentPage >= metadata.totalPages
+                                        ? "pointer-events-none opacity-50"
+                                        : ""
+                                }
+                            />
+                        </PaginationItem>
                     </PaginationContent>
                 </Pagination>
             </div>
