@@ -5,27 +5,32 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const { user, status } = useAuth();
-  const router = useRouter();
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+    const { user, status } = useAuth();
+    const router = useRouter();
 
-  useEffect(() => {
-    if (status === 'checking') return;
+    useEffect(() => {
+        // Espera a que termine la hidratactión
+        if (status === 'checking') return;
+        console.log("Datos del user:", user);
+        if (!user?.token) {
+            router.replace('/login');
+            return;
+        }
+        const payload = decodeJWT(user.token);
+        console.log("payload: ", payload);
+        if (!payload || payload.role !== 'User') {
+            router.replace('/');
+            return;
+        }
 
-    if (!user?.token) {
-      router.replace("/login");
-      return;
-    }
+    }, [user, status, router]);
 
-    const payload = decodeJWT(user.token);
-    if (!payload || payload.role !== "User") {
-      router.replace("/");
-    }
-  }, [user, status, router]);
+    if (status === 'checking' || !user) return <div>Cargando...</div>;
 
-  if (status === "checking" || !user) {
-    return <div>Cargando...</div>;
-  }
-
-  return <>{children}</>;
+    return (
+        <main>
+            {children}
+        </main>
+    )
 }
