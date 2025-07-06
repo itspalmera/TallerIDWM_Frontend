@@ -1,18 +1,24 @@
 'use client';
 
 import { useCartStore } from "@/stores/CartStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CartItemCard } from "@/components/Cart/CartItemCard";
+import { useAuth } from "@/hooks/useAuth";
 
 export const CartPage = () => {
     const { items: cart, totalPrice, fetchCart, createOrder, removeFromCart } = useCartStore();
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchCart();
     }, []);
 
     const handleCheckout = () => {
+        if (!user) {
+            alert("Debes iniciar sesión para realizar un pedido.");
+            return;
+        }
         if (cart.length === 0) {
             alert("El carrito está vacío. Agrega productos antes de realizar el pedido.");
             return;
@@ -20,12 +26,12 @@ export const CartPage = () => {
         createOrder()
             .then(() => {
                 console.log("Pedido creado exitosamente");
+                alert(`Pedido realizado exitosamente. Total a pagar: $${totalPrice}`);
             })
             .catch((error) => {
                 console.error("Error al crear el pedido:", error);
                 alert("Hubo un error al realizar el pedido. Inténtalo de nuevo más tarde.");
             });
-        alert(`Pedido realizado exitosamente. Total a pagar: $${totalPrice}`);
     };
 
     return (
@@ -46,9 +52,15 @@ export const CartPage = () => {
                         </div>
                     </div>
                     <div className="mt-6 space-y-2">
+                        {!user && (
+                            <div className="text-red-600 font-semibold text-center mb-2">
+                                Debes iniciar sesión para realizar un pedido.
+                            </div>
+                        )}
                         <Button
                             className="w-full bg-green-600 hover:bg-green-700 text-white"
                             onClick={handleCheckout}
+                            disabled={!user}
                         >
                             Hacer Pedido
                         </Button>
