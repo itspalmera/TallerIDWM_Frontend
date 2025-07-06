@@ -1,9 +1,9 @@
 "use client";
 
-import {User} from "@/interfaces/User";
-import { any } from "zod/v4-mini";
+import { User } from "@/interfaces/User";
 import { authReducer, AuthState } from "./AuthReducer";
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
+import { getUserFromToken } from "@/helpers/decodeJWT";
 
 type AuthContextProps = {
     user: User | null;
@@ -23,7 +23,7 @@ const authInitialState: AuthState = {
 
 export const AuthContext = createContext({} as AuthContextProps);
 
-export const AuthProvider = ({children}: any) => {
+export const AuthProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(authReducer, authInitialState);
 
     const auth = (user: User) => {
@@ -38,6 +38,22 @@ export const AuthProvider = ({children}: any) => {
     const updateUser = (user: User) => {
         dispatch({ type: 'updateUser', payload: { user } });
     }
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            console.log("Token found:", token);
+            const user = getUserFromToken(token);
+            if (user) {
+                dispatch({ type: 'auth', payload: { user } });
+            } else {
+                dispatch({ type: 'non-authenticated' });
+            }
+        } else {
+            console.log("No token found, setting status to non-authenticated");
+            dispatch({ type: 'non-authenticated' });
+        }
+    }, []);
 
     return (
         <AuthContext.Provider
