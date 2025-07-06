@@ -3,7 +3,7 @@
 import { ProductCard } from "@/components/Products/ProductCard";
 import { ProductDialog } from "@/components/Products/ProductDialog";
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Product } from "@/interfaces/Products/Product";
 import { ProductServices } from "@/services/ProductServices";
 import { useProductStore } from "@/stores/ProductStore"
@@ -16,6 +16,8 @@ export default function ViewProductPage() {
     const [allProducts, setAllProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [brands, setBrands] = useState<string[]>([]);
+    const [localMinPrice, setLocalMinPrice] = useState<string>("");
+    const [localMaxPrice, setLocalMaxPrice] = useState<string>("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,8 +40,9 @@ export default function ViewProductPage() {
     }, [filters]);
 
     useEffect(() => {
-        console.log("Metadata:", metadata);
-    }, [metadata]);
+        setLocalMinPrice(filters.minPrice?.toString() ?? "");
+        setLocalMaxPrice(filters.maxPrice?.toString() ?? "");
+    }, [filters.minPrice, filters.maxPrice]);
 
     const handleFilterChange = (field: string, value: string) => {
         const updatedFilters = {
@@ -156,6 +159,42 @@ export default function ViewProductPage() {
                                 <SelectItem value="nameDesc">Z - A</SelectItem>
                             </SelectContent>
                         </Select>
+                    </div>
+
+                    {/* Rango de precios */}
+                    <div className="flex flex-col items-start w-[420px]">
+                        <span className="text-[20px] font-bold mb-1">Rango de precios</span>
+                        <div className="flex gap-2 w-full">
+                            <input
+                                type="number"
+                                min={0}
+                                value={localMinPrice}
+                                onChange={e => setLocalMinPrice(e.target.value)}
+                                className="bg-white border border-purple-300 p-2 rounded w-1/2"
+                                placeholder="Mínimo"
+                            />
+                            <input
+                                type="number"
+                                min={0}
+                                value={localMaxPrice}
+                                onChange={e => setLocalMaxPrice(e.target.value)}
+                                className="bg-white border border-purple-300 p-2 rounded w-1/2"
+                                placeholder="Máximo"
+                            />
+                            <button
+                                className="bg-purple-500 text-white font-semibold px-4 py-2 rounded hover:bg-purple-600 transition-colors"
+                                onClick={() => {
+                                    setFilters({
+                                        ...filters,
+                                        minPrice: localMinPrice ? Number(localMinPrice) : undefined,
+                                        maxPrice: localMaxPrice ? Number(localMaxPrice) : undefined,
+                                        pageNumber: 1
+                                    });
+                                }}
+                            >
+                                Filtrar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
