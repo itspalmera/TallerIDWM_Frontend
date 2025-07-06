@@ -1,4 +1,5 @@
 export interface Product {
+    id: number;
     title: string;
     price: number;
     imageUrl: string[];
@@ -6,4 +7,14 @@ export interface Product {
     stock: number;
     category?: string;
     brand?: string;
+}
+
+export interface CartItem extends Product {
+    productId: number;
+    name: string;
+    quantity: number;
+    price: number;
+    imageUrl: string[];
+    category: string;
+    brand: string;
 }
