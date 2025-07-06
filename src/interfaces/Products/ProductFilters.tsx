@@ -6,4 +6,6 @@ export interface ProductFilters {
     categories?: string;
     brands?: string;
     sortBy?: string;
+    minPrice?: number;
+    maxPrice?: number;
 }
