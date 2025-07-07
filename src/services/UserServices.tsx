@@ -1,6 +1,7 @@
 import { ApiBackend } from "@/clients/axios"
 import { UserFilters } from "@/interfaces/Users/UserFilters"
 import { User } from "@/interfaces/Users/User"
+import { ResponseAPI } from "@/interfaces/ResponseAPI";
 
 export const UserService = {
   async fetchUsers(filters?: UserFilters): Promise<User[]> {
@@ -48,3 +49,47 @@ export const UserServiceFilter = {
     await ApiBackend.put(`/api/User/${id}/deactivate`)
   },
 }
+
+
+
+export const UserServices = {
+  async updateProfile(data: {
+    name: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    birthDate: string;
+  }): Promise<ResponseAPI> {
+    const payload = {
+      name: data.name,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      birthDate: data.birthDate,
+    };
+
+    const response = await ApiBackend.put<ResponseAPI>("user/profile", payload);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Error al actualizar el perfil.");
+    }
+
+    return response.data;
+  },
+    async updateAddress(data: {
+    street: string;
+    number: string;
+    commune: string;
+    region: string;
+    postalCode: string;
+  }): Promise<ResponseAPI> {
+    const response = await ApiBackend.patch<ResponseAPI>("user/address", data);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Error al actualizar dirección.");
+    }
+
+    return response.data;
+  },
+
+};
