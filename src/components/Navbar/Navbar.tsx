@@ -14,7 +14,7 @@ export default function Navbar() {
   const router = useRouter()
 
   const { items: cart } = useCartStore();
-  const { user, logout} = useAuth();
+  const { user, logout } = useAuth();
   console.log("Usuario en Navbar:", user);
   const [search, setSearch] = useState("")
 
@@ -58,102 +58,114 @@ export default function Navbar() {
         )}
 
         {/* Navegación */}
-        
+
         <nav className="flex items-center gap-6 font-semibold">
 
-        {/* NO AUTENTICADO */}
-        {!user && (
-          <>
-            {/* Productos */}
-            <Link href="/">Productos</Link>
-            
-            {/* Carrito */}
-            <Link
-              href="/login"
-              className="relative flex items-center hover:bg-purple-400 rounded-full p-2 transition-all"
-            >
-              <ShoppingCartIcon className="w-6 h-6" />
-            </Link>
+          {/* NO AUTENTICADO */}
+          {!user && (
+            <>
+              {/* Carrito */}
+              <Link
+                href="/login"
+                className="relative flex items-center hover:bg-purple-400 rounded-full p-2 transition-all"
+              >
+                <ShoppingCartIcon className="w-6 h-6" />
+              </Link>
+              {/* Productos */}
+              <Link href="/">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  Ver Productos
+                </Button>
+              </Link>
 
-            {/* Iniciar sesión */}
-            <Link href="/login">
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                <UserIcon className="w-4 h-4 mr-2" /> Iniciar sesión
+              {/* Iniciar sesión */}
+              <Link href="/login">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  <UserIcon className="w-4 h-4 mr-2" /> Iniciar sesión
+                </Button>
+              </Link>
+            </>
+          )}
+
+          {/* CLIENTE */}
+          {user?.role === 'User' && (
+            <>
+              {/* Carrito */}
+              <Link
+                href="/cart"
+                className="relative flex items-center hover:bg-purple-400 rounded-full p-2 transition-all"
+              >
+                <ShoppingCartIcon className="w-6 h-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+              {/* Productos */}
+              <Link href="/">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  Ver Productos
+                </Button>
+              </Link>
+              {/* Productos */}
+              <Link href="/client/orders">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  Ver Órdenes
+                </Button>
+              </Link>
+
+              {/* Perfil */}
+              <Link href="/client/editProfile">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  <UserIcon className="w-2 h-2 mr-2" />
+                  {user.name}
+                </Button>
+              </Link>
+
+              {/* Cerrar sesión */}
+              <Button
+                onClick={() => {
+                  logout();
+                  router.push('/login');
+                }}
+                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
+              >
+                Cerrar sesión
               </Button>
-            </Link>
-          </>
-        )}
+            </>
+          )}
 
-        {/* CLIENTE */}
-        {user?.role === 'User' && (
-          <>
-            {/* Productos */}
-            <Link href="/">Productos</Link>
-            
-            {/* Carrito */}
-            <Link
-              href="/cart"
-              className="relative flex items-center hover:bg-purple-400 rounded-full p-2 transition-all"
-            >
-              <ShoppingCartIcon className="w-6 h-6" />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
+          {/* ADMIN */}
+          {user?.role === 'Admin' && (
+            <>
+              {/* Productos */}
+              <Link href="/admin/products">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  Gestionar Productos
+                </Button>
+              </Link>
 
-            {/* Perfil */}
-            <Link href="/client/editProfile">
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                <UserIcon className="w-2 h-2 mr-2" />
-                {user.name}
+              {/* Clientes */}
+              <Link href="/admin/userList">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
+                  Clientes
+                </Button>
+              </Link>
+
+              {/* Cerrar sesión */}
+              <Button
+                onClick={() => {
+                  logout();
+                  router.push('/login');
+                }}
+                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
+              >
+                Cerrar sesión
               </Button>
-            </Link>
-
-            {/* Cerrar sesión */}
-            <Button 
-              onClick={() => {
-                logout();
-                router.push('/login');
-              }} 
-              className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
-            >
-              Cerrar sesión
-            </Button>
-          </>
-        )}
-
-        {/* ADMIN */}
-        {user?.role === 'Admin' && (
-          <>
-            {/* Productos */}
-            <Link href="/admin/products">
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                Gestionar Productos
-              </Button>
-            </Link>
-            
-            {/* Clientes */}
-            <Link href="/admin/userList">
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
-                Clientes
-              </Button>
-            </Link>
-
-            {/* Cerrar sesión */}
-            <Button
-              onClick={() => {
-                logout();
-                router.push('/login');
-              }} 
-              className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
-            >
-              Cerrar sesión
-            </Button>
-          </>
-        )}
-      </nav>
+            </>
+          )}
+        </nav>
 
       </div>
     </header>
