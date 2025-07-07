@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/interfaces/User";
+import { User } from "@/interfaces/Users/User";
 import { authReducer, AuthState } from "./AuthReducer";
 import { createContext, useEffect, useReducer } from "react";
 import { getUserFromToken } from "@/helpers/decodeJWT";

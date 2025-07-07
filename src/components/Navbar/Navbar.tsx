@@ -135,7 +135,7 @@ export default function Navbar() {
             </Link>
             
             {/* Clientes */}
-            <Link href="/admin/clients">
+            <Link href="/admin/userList">
               <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-full">
                 Clientes
               </Button>
