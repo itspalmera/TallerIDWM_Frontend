@@ -1,4 +1,4 @@
-import { User } from "@/interfaces/User";
+import { User } from "@/interfaces/Users/User";
 
 
 export const decodeJWT = (token:string) => {

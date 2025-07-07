@@ -7,7 +7,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { AuthContext } from "@/contexts/auth/AuthContext";
 import { ResponseAPI } from "@/interfaces/ResponseAPI";
-import { User } from "@/interfaces/User";
+import { User } from "@/interfaces/Users/User";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -93,12 +93,12 @@ export const LoginPage = () => {
             auth(user_);
             if (payload.role === 'Admin') {
                 // Redirigir al dashboard de administrador
-                router.push('/admin/userList');
+                router.push('/admin');
             } 
             
             else if (payload.role === 'User') {
                 // Redirigir al dashboard de usuario
-                router.push('/client/changePassword')
+                router.push('/client')
             }
         }
         catch (error: any) {
