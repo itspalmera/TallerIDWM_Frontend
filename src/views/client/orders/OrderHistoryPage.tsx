@@ -12,12 +12,14 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { OrderDetailDialog } from "@/components/Orders/OrderDialog";
 
 export default function OrderHistoryPage() {
   const { orders, loading, fetchOrders, filters, setFilters } = useOrderStore();
-  const [searchTerm, setSearchTerm] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [price, setPrice] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -28,19 +30,14 @@ export default function OrderHistoryPage() {
       ...filters,
       registeredFrom: dateFrom || undefined,
       registeredTo: dateTo || undefined,
+      price: price ? Number(price) : undefined,
     });
   };
+
   return (
     <div className="p-4 mt-20 max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Historial de Pedidos</h1>
       <div className="flex gap-4 flex-wrap mb-4">
-        <Input
-          type="text"
-          placeholder="Buscar por dirección o ID"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded w-1/3"
-        />
         <Input
           type="date"
           value={dateFrom}
@@ -52,6 +49,14 @@ export default function OrderHistoryPage() {
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
           className="border p-2 rounded"
+        />
+        <Input
+          type="number"
+          min={0}
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className="border p-2 rounded"
+          placeholder="Monto máximo de pedido"
         />
         <Button
           onClick={handleSearch}
@@ -98,7 +103,7 @@ export default function OrderHistoryPage() {
                     <Button
                       variant="link"
                       className="text-blue-600"
-                      // onClick={() => ...}
+                      onClick={() => setSelectedOrder(order)}
                     >
                       Ver detalles
                     </Button>
@@ -110,6 +115,11 @@ export default function OrderHistoryPage() {
         </Table>
       )}
 
+      <OrderDetailDialog
+        order={selectedOrder}
+        open={!!selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>
   );
 }

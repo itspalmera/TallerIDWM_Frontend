@@ -1,6 +1,6 @@
 import OrderHistoryPage from "@/views/client/orders/OrderHistoryPage";
 
-export default function AdminLayout() {
+export default function OrderHistoryLayout() {
     return(
         <div>
             <OrderHistoryPage/>

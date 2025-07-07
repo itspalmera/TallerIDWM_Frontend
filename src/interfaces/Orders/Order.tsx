@@ -6,11 +6,9 @@ export interface Direction {
   commune: string;
   postalCode: string;
   userId: string;
-  // Puedes agregar más campos si necesitas detalles del usuario
 }
 
 export interface OrderItemDto {
-  // Ajusta estos campos según tu modelo real de OrderItemDto
   id: number;
   name: string;
   imageUrl: string;
@@ -20,7 +18,7 @@ export interface OrderItemDto {
 
 export interface Order {
   id: number;
-  createdAt: string; // ISO string, puedes usar Date si lo conviertes
+  createdAt: string; 
   address: Direction;
   total: number;
   items: OrderItemDto[];
