@@ -16,9 +16,9 @@ export const CartService = {
 
     addToCart: async (productId: number, quantity: number) => {
         try {
-            const response = await ApiBackend.post<ResponseAPI>(
-                `basket?productId=${productId}&quantity=${quantity}`,
-            );
+            const response = await ApiBackend.post<ResponseAPI>('basket', null, {
+                params: { productId, quantity }
+            });
             console.log("Product added to cart successfully:", response.data);
             return response.data?.data;
         } catch (error) {
@@ -28,9 +28,9 @@ export const CartService = {
     },
     removeFromCart: async (productId: number, quantity: number) => {
         try {
-            const response = await ApiBackend.delete<ResponseAPI>(
-                `basket?productId=${productId}&quantity=${quantity}`,
-            );
+            const response = await ApiBackend.delete<ResponseAPI>('basket', {
+                params: { productId, quantity }
+            });
             console.log("Product removed from cart successfully:", response.data);
             return response.data?.data;
         } catch (error) {
