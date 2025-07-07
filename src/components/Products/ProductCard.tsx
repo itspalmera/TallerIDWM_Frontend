@@ -19,14 +19,21 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
     const { user } = useAuth();
     const [showDialog, setShowDialog] = useState(false);
 
-    const handleAddToCart = (e: React.MouseEvent) => {
+    const handleAddToCart = async (e: React.MouseEvent) => {
         e.stopPropagation();
+
         if (!user) {
             setShowDialog(true);
             return;
         }
-        addToCart(product.id, 1);
-        alert(`Producto ${product.title} agregado al carrito`);
+
+        try {
+            await addToCart(product.id, 1);
+            alert(`Producto "${product.title}" agregado al carrito.`);
+        } catch (err) {
+            console.error("Error al agregar al carrito:", err);
+            alert("No se pudo agregar el producto. Intenta nuevamente.");
+        }
     }
 
     const router = useRouter();
@@ -39,7 +46,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                         <Image
                             src={product.imageUrl[0]}
                             alt={product.title}
-                            width={256} 
+                            width={256}
                             height={256}
                             className="object-contain w-auto h-full max-h-32"
                             style={{ width: "auto", height: "100%" }}

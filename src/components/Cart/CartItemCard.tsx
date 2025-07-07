@@ -13,6 +13,13 @@ interface CartItemCardProps {
 export const CartItemCard = ({ item }: CartItemCardProps) => {
     const { addToCart, removeFromCart } = useCartStore();
 
+
+    console.log("URL imagen item: ", item.imageUrl)
+    console.log("URL de la imagen del producto:", item.imageUrl?.[0]);
+    const imageUrl = item.imageUrl?.[0] && item.imageUrl[0].startsWith("http")
+        ? item.imageUrl[0]
+        : "/Product.jpg";
+
     const handleRemoveAll = () => {
         removeFromCart(item.productId, item.quantity);
         alert("Producto eliminado del carrito.");
@@ -22,13 +29,7 @@ export const CartItemCard = ({ item }: CartItemCardProps) => {
     return (
         <div className="bg-white p-4 rounded shadow flex flex-col md:flex-row gap-4">
             <Image
-                src={
-                    item.imageUrl && item.imageUrl[0]
-                        ? item.imageUrl[0].startsWith('/') || item.imageUrl[0].startsWith('http')
-                            ? item.imageUrl[0]
-                            : '/' + item.imageUrl[0]
-                        : '/Product.jpg'
-                }
+                src={imageUrl}
                 alt={item.name}
                 width={100}
                 height={100}
