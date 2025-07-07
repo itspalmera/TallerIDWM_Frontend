@@ -23,7 +23,7 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
         e.stopPropagation();
         if (!user) {
             setShowDialog(true);
-            return;       
+            return;
         }
         addToCart(product.id, 1);
         alert(`Producto ${product.title} agregado al carrito`);
@@ -34,9 +34,16 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
         <div>
             <div className="bg-white rounded-lg  cursor-pointer transition hover:scale-105">
                 <div onClick={onClick}>
-                    <div className="relative w-full h-32 flex items-center justify-center"
+                    <div className="relative w-full h-32 flex items-center justify-center height:auto"
                     >
-                        <Image src={product.imageUrl[0]} alt={product.title} width={200} height={200} className="object-contain" />
+                        <Image
+                            src={product.imageUrl[0]}
+                            alt={product.title}
+                            width={256} 
+                            height={256}
+                            className="object-contain w-auto h-full max-h-32"
+                            style={{ width: "auto", height: "100%" }}
+                        />
                     </div>
                     <div className="p-4">
                         <h3 className="text-lg font-semibold text-center">
@@ -52,12 +59,12 @@ export const ProductCard = ({ product, onClick }: ProductCardProps) => {
                         boxShadow: "2px 3px 2px rgba(0,0,0,0.2)"
                     }}
                     onClick={handleAddToCart}
-                    >
+                >
                     Agregar al carrito
                 </Button>
             </div>
 
-            <LoginDialog open={showDialog} onClose={() => setShowDialog(false)}/>
+            <LoginDialog open={showDialog} onClose={() => setShowDialog(false)} />
         </div>
     )
 }

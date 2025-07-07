@@ -15,6 +15,7 @@ export default function Navbar() {
 
   const { items: cart } = useCartStore();
   const { user, logout} = useAuth();
+  console.log("Usuario en Navbar:", user);
   const [search, setSearch] = useState("")
 
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);

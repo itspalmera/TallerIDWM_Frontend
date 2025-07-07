@@ -29,7 +29,7 @@ const formSchema = z.object({
     stock: z.coerce.number().min(0, "El stock debe ser mayor o igual a 0"),
     category: z.string().min(1, "La categoría es obligatoria"),
     brand: z.string().min(1, "La marca es obligatoria"),
-    imageFile: z
+    images: z
         .instanceof(File, { message: "Debes subir una imagen" })
         .refine((file) => file && file.size > 0, "Debes subir una imagen"),
     condition: z.string().min(1, "Indique el estado del producto"),
@@ -61,7 +61,7 @@ export const CreateProductPage = () => {
             stock: 0,
             category: "",
             brand: "",
-            imageFile: undefined,
+            images: undefined,
             condition: "",
         }
     });
@@ -77,10 +77,11 @@ export const CreateProductPage = () => {
             formData.append("category", values.category);
             formData.append("brand", values.brand);
             formData.append("condition", values.condition);
-            formData.append("imageFile", values.imageFile);
+            formData.append("images", values.images);
 
             await addProduct(formData); 
             alert("Producto creado exitosamente");
+            router.push("/admin");
             form.reset();
         } catch (error: any) {
             setErrors(error.message);
@@ -144,7 +145,7 @@ export const CreateProductPage = () => {
 
                     <FormField
                         control={form.control}
-                        name="imageFile"
+                        name="images"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Imagen del producto</FormLabel>
