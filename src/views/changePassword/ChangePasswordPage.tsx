@@ -1,5 +1,5 @@
 "use client";
-
+import { UserServices } from "@/services/UserServices";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage,Form } from "@/components/ui/form";
@@ -43,19 +43,27 @@ export const ChangePasswordPage = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      setErrorBool(false);
-      setSuccessMessage("Contraseña cambiada exitosamente.");
-      setShowSuccessAlert(true);
-    } catch (error: any) {
-      const errorCatch =
-        error.response?.data?.message ?? "Error desconocido.";
-      setErrors(errorCatch);
-      setErrorBool(true);
-      setSuccessMessage(null);
-      setShowSuccessAlert(false);
-    }
-  };
+  try {
+    setErrorBool(false);
+
+    await UserServices.changePassword({
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword,
+      confirmPassword: values.confirmNewPassword,
+    });
+
+    setSuccessMessage("Contraseña cambiada exitosamente.");
+    setShowSuccessAlert(true);
+  } catch (error: any) {
+    const errorCatch =
+      error.response?.data?.message ?? error.message ?? "Error desconocido.";
+    setErrors(errorCatch);
+    setErrorBool(true);
+    setSuccessMessage(null);
+    setShowSuccessAlert(false);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-white">
