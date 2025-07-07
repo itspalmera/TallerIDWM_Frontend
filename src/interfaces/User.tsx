@@ -10,7 +10,7 @@ export interface User {
     postalCode?: string;
     registered?: Date;
     lastAccess?: Date;
-    birthDate?:  Date;
+    birthdate?:  Date;
     active?:     boolean;
     token:      string;
     role?:       string;
