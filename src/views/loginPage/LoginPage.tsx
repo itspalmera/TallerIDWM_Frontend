@@ -1,19 +1,15 @@
 "use client";
 
-import { ApiBackend } from "@/clients/axios";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AuthContext } from "@/contexts/auth/AuthContext";
-import { ResponseAPI } from "@/interfaces/ResponseAPI";
-import { User } from "@/interfaces/User";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { set } from "zod/v4-mini";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -26,7 +22,6 @@ const formSchema = z.object({
     }),
 })
 
-// Mantiene la lógica de negocio de la página de inicio de sesión (Axios)
 export const LoginPage = () => {
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -37,51 +32,23 @@ export const LoginPage = () => {
         },
     });
 
-    const [errors, setErrors] = useState<string | null>(null);
-    const [errorBool, setErrorBool] = useState<boolean>(false);
+    const [errors] = useState<string | null>(null);
+    const [errorBool] = useState<boolean>(false);
 
-    const { auth } = useContext(AuthContext);
 
+    const { login } = useAuth();
     const router = useRouter();
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        try {
-            console.log("Valores enviados en formulario:", values);
-            const { data } = await ApiBackend.post<ResponseAPI>('auth/login', values);
-
-            if (data.success === false) {
-                console.error("Error en la respuesta del servidor:", data.message);
-                setErrors("Error en la respuesta del servidor: ");
-                setErrorBool(true);
-                return;
-            }
-            setErrors(null);
-            setErrorBool(false);
-
-            const data_ = data.data;
-            const user_: User = {
-                email: data_.email,
-                lastName: data_.lastName,
-                name: data_.name,
-                token: data_.token,
-            }
-
-            console.log("Datos del usuario:", user_);
-            auth(user_);
-            router.push('/');
+        const user = await login(values);
+        if (user) {
+            if (user.role === "Admin") router.push("/admin/userList");
+            else if (user.role === "User") router.push("/client/changePassword");
         }
-        catch (error: any) {
-            let errorCatch = error.response.data.message
-            console.error("Error al enviar el formulario:", errorCatch);
-            setErrors(errorCatch);
-            setErrorBool(true);
-        }
-
-    }
+    };
 
     return (
         <div className="min-h-screen bg-white">
-            {/* NavbarBase fuera del flex de los lados */}
             <div className="flex flex-col md:flex-row h-[calc(100vh-64px)]">
                 {/* Lado Izquierdo */}
                 <div className="md:w-1/2 w-full text-white flex flex-col justify-center items-center p-10"

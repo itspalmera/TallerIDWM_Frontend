@@ -2,18 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Form } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { use, useState } from "react";
-import { number, any, email } from 'zod/v4-mini';
-import { ApiBackend } from "@/clients/axios";
-import { ResponseAPI } from "@/interfaces/ResponseAPI";
-import { fi } from "zod/v4/locales";
-import { error } from "console";
+import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Terminal } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 
 // Definimos el esquema de validación con Zod
@@ -24,7 +19,7 @@ const formSchema = z.object({
         message: "Nombre es requerido.",
     }),
 
-    lastname: z.string().min(3, {
+    lastName: z.string().min(3, {
         message: "El apellido debe tener al menos 3 caracteres.",
     }).nonempty({
         message: "Apellido es requerido.",
@@ -42,7 +37,7 @@ const formSchema = z.object({
         message: "Numero de teléfono es requerido.",
     }),
 
-    birthDate: z.string().nonempty({
+    birthdate: z.string().nonempty({
         message: "Fecha de nacimiento es requerida.",
     }),
 
@@ -66,13 +61,12 @@ export const RegisterPage = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            lastname: "",
+            lastName: "",
             email: "",
             phone: "",
-            birthDate: "",
+            birthdate: "",
             password: "",
             confirmPassword: "",
-
         },
     });
 
@@ -80,48 +74,32 @@ export const RegisterPage = () => {
     const [errorBool, setErrorBool] = useState<boolean>(false);
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+    const { register } = useAuth();
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        setErrorBool(false);
+        setErrors(null);
+        console.log("Valores del formulario:", values);
         try {
-            setErrorBool(false);
-            console.log("Valores enviados en el formulario:", values);
-            const data = await ApiBackend.post<ResponseAPI>('Auth/register', values);
-            /*
-            const user_ : User = {
-                firstName: data.firtsName,
-                email: data.email,
-                lastName: data.lastName,
-                token : data.token
-            }
-            */
-            console.log("Respuesta del servidor:", data);
-
-            // Si success es true, mostramos la alerta
-            if (data.data?.success) {
-                setSuccessMessage(data.data.message ?? "Registro exitoso.");
+            const success = await register(values);
+            if (success) {
                 setShowSuccessAlert(true);
+            } else {
+                setErrors("No se pudo registrar el usuario.");
+                setErrorBool(true);
             }
-
-        }
-
-        catch (error: any) {
-            let errorCatch = error.response.data.message;
-            console.error("Error al enviar el formulario:", errorCatch);
-            setErrors(errorCatch);
+        } catch (error: any) {
+            console.log(error);
+            setErrors(error);
             setErrorBool(true);
-            setSuccessMessage(null);
-            setShowSuccessAlert(false);
         }
-    }
+    };
 
 
     return (
-        // Usaremos Axios y cosas aqui 
         <div className="min-h-screen bg-white">
             <div className="flex flex-col md:flex-row h-screen">
-
 
                 {/* Lado Izquierdo */}
                 <div className="md:w-1/2 w-full text-white flex flex-col justify-center items-center p-10"
@@ -163,13 +141,11 @@ export const RegisterPage = () => {
                                     ¡Registro exitoso!
                                 </AlertTitle>
                                 <AlertDescription>
-                                    {successMessage}
+                                    {/* {successMessage} */}
                                 </AlertDescription>
                             </Alert>
 
                         )}
-
-
 
                         {/* Redireccion a Login */}
                         <p className="mb-4 text-sm text-gray-600 text-center md:text-left">
@@ -202,7 +178,7 @@ export const RegisterPage = () => {
                                 {/* TODO: lastName */}
                                 <FormField
                                     control={form.control}
-                                    name="lastname"
+                                    name="lastName"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel className="text-lg md:text-[20px]">Apellido</FormLabel>
@@ -278,7 +254,7 @@ export const RegisterPage = () => {
                                 {/* TODO: BIRTHDAY */}
                                 <FormField
                                     control={form.control}
-                                    name="birthDate"
+                                    name="birthdate"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel className="text-lg md:text-[20px]">Fecha de Nacimiento</FormLabel>
@@ -313,7 +289,7 @@ export const RegisterPage = () => {
                                 <Button type="submit" className="md:w-full mt-8 md:col-span-2 justify-self-center" >
                                     Registrarse
                                 </Button>
-                                
+
                             </form>
                         </Form>
 
