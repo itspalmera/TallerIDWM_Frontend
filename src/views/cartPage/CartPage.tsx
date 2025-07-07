@@ -34,6 +34,13 @@ export const CartPage = () => {
             });
     };
 
+    const handleEmptyCart = async () => {
+        await Promise.all(
+            cart.map(item => removeFromCart(item.productId, item.quantity))
+        );
+        fetchCart();
+    };
+
     return (
         <div className="bg-gray-100 min-h-screen py-10 px-4 md:px-10 pt-20">
             <div className="max-w-7xl mx-auto">
@@ -67,11 +74,7 @@ export const CartPage = () => {
                         <Button
                             variant="outline"
                             className="w-full"
-                            onClick={() =>
-                                cart.forEach(item =>
-                                    removeFromCart(item.productId, item.quantity)
-                                )
-                            }
+                            onClick={handleEmptyCart}
                         >
                             Vaciar Carrito
                         </Button>
