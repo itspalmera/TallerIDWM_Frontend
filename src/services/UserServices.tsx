@@ -92,4 +92,20 @@ export const UserServices = {
     return response.data;
   },
 
+
+  async changePassword(data: {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  }): Promise<ResponseAPI> {
+    const response = await ApiBackend.patch<ResponseAPI>("user/profile/password", data);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Error al cambiar la contraseña.");
+    }
+
+    return response.data;
+  }
+
+
 };
